@@ -1,6 +1,3 @@
-##############################################################################
-# Account Variables
-##############################################################################
 variable "ibmcloud_api_key" {
   description = "Get the ibmcloud api key from https://cloud.ibm.com/iam/apikeys"
   type        = string
@@ -27,11 +24,6 @@ variable "resource_group" {
   type        = string
 }
 
-##############################################################################
-
-##############################################################################
-# Portworx Variables
-##############################################################################
 variable "use_external_etcd" {
   type        = bool
   default     = false
@@ -57,66 +49,11 @@ variable "region" {
   type = string
 }
 
-##############################################################################
-
-##############################################################################
-# Database Variables
-##############################################################################
-
-variable "cpu_allocation_count" {
-  description = "Enables and allocates the number of specified dedicated cores to your deployment"
-  type        = number
-  default     = 9
-}
-
-variable "disk_allocation_mb" {
-  description = "The amount of disk space for the database, split across all members."
-  type        = number
-  default     = 393216
-}
-
-variable "memory_allocation_mb" {
-  description = "The amount of memory in megabytes for the database, split across all members."
-  type        = number
-  default     = 24576
-}
-
-variable "db_plan" {
-  description = "The name of the service plan that you choose for db instance. "
-  type        = string
-  default     = "standard"
-}
-
-variable "service_endpoints" {
-  description = "Specify whether you want to enable the public, private, or both service endpoints. Supported values are public, private, or public-and-private"
-  type        = string
-  default     = "public"
-}
-
-variable "db_version" {
-  description = "The version of the database to be provisioned. "
-  type        = string
-  default     = "3.3"
-}
-
-variable "kubernetes_secret_namespace" {
-  description = "Name of the namespace"
-  type        = string
-  default     = "kube-system"
-}
-
 variable "pwx_plan" {
   description = "Portworx plan type "
   type        = string
   default     = "px-enterprise"
 }
-
-variable "cluster_name" {
-  description = "Name of the cluster"
-  type        = string
-  default     = "pwx"
-}
-
 variable "secret_type" {
   description = "secret type"
   type        = string
