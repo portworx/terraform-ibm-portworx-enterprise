@@ -12,7 +12,7 @@ variable "unique_id" {
   type        = string
 }
 
-variable "cluster" {
+variable "cluster_name" {
   description = "Name of existing roks cluster"
   type        = string
 }

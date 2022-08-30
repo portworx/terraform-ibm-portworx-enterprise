@@ -10,7 +10,7 @@ data "ibm_container_vpc_cluster" "cluster" {
 }
 
 data "ibm_container_cluster_config" "cluster" {
-  cluster_name_id   = var.cluster
+  cluster_name_id   = var.cluster_name
   resource_group_id = data.ibm_resource_group.group.id
   admin             = true
   config_dir        = path.root
