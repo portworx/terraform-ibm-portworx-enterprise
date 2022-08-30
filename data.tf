@@ -5,7 +5,7 @@ data "ibm_resource_group" "group" {
 }
 
 data "ibm_container_vpc_cluster" "cluster" {
-  name              = var.cluster
+  name              = var.cluster_name
   resource_group_id = data.ibm_resource_group.group.id
 }
 
