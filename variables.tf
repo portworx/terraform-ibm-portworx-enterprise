@@ -1,13 +1,6 @@
 ##############################################################################
 # Account Variables
 ##############################################################################
-
-variable "install_storage" {
-  type        = bool
-  default     = true
-  description = "If set to false does not install storage and attach the volumes to the worker nodes. Enabled by default"
-}
-
 variable "ibmcloud_api_key" {
   description = "Get the ibmcloud api key from https://cloud.ibm.com/iam/apikeys"
   type        = string
@@ -37,53 +30,31 @@ variable "resource_group" {
 ##############################################################################
 
 ##############################################################################
-# Block Storage Variables
-##############################################################################
-
-variable "capacity" {
-  description = "Capacity for all block storage volumes provisioned in gigabytes"
-  type        = number
-  default     = 100
-}
-
-variable "profile" {
-  description = "The profile to use for this volume."
-  type        = string
-  default     = "10iops-tier"
-}
-
-##############################################################################
-
-##############################################################################
 # Portworx Variables
 ##############################################################################
-variable "create_external_etcd" {
+variable "use_external_etcd" {
   type        = bool
   default     = false
   description = "Do you want to create an external_etcd? `True` or `False`"
 }
 
-variable "region" {
-  description = "The region Portworx will be installed in: us-south, us-east, eu-gb, eu-de, jp-tok, au-syd, etc."
-}
-
-# These credentials have been hard-coded because the 'Databases for etcd' service instance is not configured to have a publicly accessible endpoint by default.
-# You may override these for additional security.
-variable "etcd_username" {
-  description = "The Username for the ETC Database provisioned"
-  type = string
-  default = "portworxuser"
-}
-variable "etcd_password" {
-  description = "The Password for the ETC Database provisioned"
-  type = string
-  sensitive = true
-  default = "etcdpassword123"
-}
 variable "etcd_secret_name" {
   type = string
-  description = "The secret name for the ETC Database certificates"
-  default = "px-etcd-cert" # don't change this
+  description = "The name of etcd secret certificate, required only when external etcd is used"
+  default = null
+}
+
+variable "external_etcd_connection_url" {
+  type = string
+  description = "The connection string with port number for the etcd, required only when external etcd is used"
+  default = null
+}
+
+
+variable "region" {
+  description = "The region Portworx will be installed in: us-south, us-east, eu-gb, eu-de, jp-tok, au-syd, etc."
+  default = "us-east"
+  type = string
 }
 
 ##############################################################################
