@@ -17,7 +17,7 @@ variable "cluster_name" {
 variable "kube_config_path" {
   description = "Path to store k8s config file: ex `~/.kube/config`"
   type        = string
-  default     = "./kubeconfig"
+  default     = "~/.kube/config"
 }
 
 variable "resource_group" {
