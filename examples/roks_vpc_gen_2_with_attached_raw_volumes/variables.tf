@@ -14,8 +14,8 @@ variable "resource_group" {
   description = "(optional) describe your variable"
 }
 
-variable "capacity" {
-  type        = number
-  description = "(optional) describe your variable"
-  default     = 100
+variable "ibmcloud_api_key" {
+  description = "Get the ibmcloud api key from https://cloud.ibm.com/iam/apikeys"
+  type        = string
+  sensitive   = true
 }
