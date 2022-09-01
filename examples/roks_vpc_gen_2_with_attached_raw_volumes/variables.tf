@@ -1,3 +1,4 @@
+//TODO: Add Descriptions
 variable "region" {
   type        = string
   description = "(optional) describe your variable"

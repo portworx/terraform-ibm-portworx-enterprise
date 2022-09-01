@@ -1,6 +1,5 @@
 #!/bin/sh
 #TODO: fix this sleep, sh error `]` missing
-sleep 60
 echo '**********************************************************************'
 echo '            Validating Portworx Enterprise Installation'
 echo '**********************************************************************'
