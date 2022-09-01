@@ -1,5 +1,4 @@
 #!/bin/sh
-#TODO: fix this sleep, sh error `]` missing
 echo '**********************************************************************'
 echo '            Validating Portworx Enterprise Installation'
 echo '**********************************************************************'
@@ -34,7 +33,7 @@ while [ "$RETRIES" -le "$LIMIT" ]; do
   elif [ "$DESIRED" -eq "$READY" ]; then
     echo "[INFO] ($READY/$DESIRED) Pods Ready..."
     break
-  elif [ "$DESIRED" -gt "$READY "]; then
+  elif [ "$DESIRED" -gt "$READY" ]; then
     echo "[INFO] ($READY/$DESIRED) Pods Ready, waiting for pods to come up..."
     sleep $SLEEP_TIME
   fi
