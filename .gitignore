@@ -35,3 +35,5 @@ terraform.rc
 
 **/tf.plan
 **/.DS_Store
+
+**/*_k8sconfig
