@@ -1,1 +1,0 @@
-# Install Portworx Enterprise on IKS Cluster (ROKS) created on VPC Gen 2 with Raw Volumes Attached to Worker Nodes
