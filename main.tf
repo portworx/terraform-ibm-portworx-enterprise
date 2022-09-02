@@ -1,5 +1,4 @@
 resource "ibm_resource_instance" "portworx" {
-
   name              = "${var.unique_id}-portworx-service"
   service           = "portworx"
   plan              = var.pwx_plan
@@ -21,11 +20,14 @@ resource "ibm_resource_instance" "portworx" {
     secret_type      = var.secret_type
   }
 
-  # provisioner "local-exec" {
-  #   environment = {
-  #     KUBECONFIG = var.kube_config_path
-  #   }
-  #   interpreter = ["/bin/bash", "-c"]
-  #   command     = file("${path.module}/utils/px_wait_until_ready.sh")
-  # }
+  provisioner "local-exec" {
+    command     = "/bin/bash ${path.module}/utils/portworx_wait_until_ready.sh"
+  }
+}
+resource "null_resource" "portworx_destroy" {
+  provisioner "local-exec" {
+    when    = destroy
+    working_dir = "${path.module}/utils/"
+    command = "/bin/bash ${path.module}/utils/portworx_destroy.sh"
+  }
 }

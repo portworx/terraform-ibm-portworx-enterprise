@@ -1,7 +1,8 @@
+//TODO: Add Descriptions
 variable "ibmcloud_api_key" {
   description = "Get the ibmcloud api key from https://cloud.ibm.com/iam/apikeys"
   type        = string
-  sensitive = true
+  sensitive   = true
 }
 
 variable "unique_id" {
@@ -17,6 +18,7 @@ variable "cluster_name" {
 variable "kube_config_path" {
   description = "Path to store k8s config file: ex `~/.kube/config`"
   type        = string
+  default     = "~/.kube/config"
 }
 
 variable "resource_group" {
@@ -31,22 +33,22 @@ variable "use_external_etcd" {
 }
 
 variable "etcd_secret_name" {
-  type = string
+  type        = string
   description = "The name of etcd secret certificate, required only when external etcd is used"
-  default = null
+  default     = null
 }
 
 variable "external_etcd_connection_url" {
-  type = string
+  type        = string
   description = "The connection string with port number for the etcd, required only when external etcd is used"
-  default = null
+  default     = null
 }
 
 
 variable "region" {
   description = "The region Portworx will be installed in: us-south, us-east, eu-gb, eu-de, jp-tok, au-syd, etc."
-  default = "us-east"
-  type = string
+  default     = "us-east"
+  type        = string
 }
 
 variable "pwx_plan" {
