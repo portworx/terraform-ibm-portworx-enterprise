@@ -21,13 +21,13 @@ resource "ibm_resource_instance" "portworx" {
   }
 
   provisioner "local-exec" {
-    command     = file("${path.module}/utils/portworx_wait_until_ready.sh")
+    command     = "/bin/bash ${path.module}/utils/portworx_wait_until_ready.sh"
   }
 }
 resource "null_resource" "portworx_destroy" {
   provisioner "local-exec" {
     when    = destroy
     working_dir = "${path.module}/utils/"
-    command = file("${path.module}/utils/portworx_destroy.sh")
+    command = "/bin/bash ${path.module}/utils/portworx_destroy.sh"
   }
 }
