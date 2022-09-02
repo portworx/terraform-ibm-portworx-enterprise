@@ -1,5 +1,5 @@
 module "portworx-enterprise" {
-  source = "../../"
+  source = "../../../../"
   //TODO: Find a way to read the ibm_api_key from environment variable
   ibmcloud_api_key = var.ibmcloud_api_key
   //TODO: Find a way to generate unique_id

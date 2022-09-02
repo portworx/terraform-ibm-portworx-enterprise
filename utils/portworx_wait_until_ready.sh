@@ -1,10 +1,9 @@
-#!/bin/sh
-#TODO: fix this sleep, sh error `]` missing
+#!/bin/bash
 echo '**********************************************************************'
 echo '            Validating Portworx Enterprise Installation'
 echo '**********************************************************************'
 SLEEP_TIME=5
-LIMIT=15
+LIMIT=10
 echo '[INFO] Trying to read Portworx Daemon Set Status...'
 
 
