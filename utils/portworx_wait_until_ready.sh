@@ -79,5 +79,6 @@ while [ "$RETRIES" -le "$LIMIT" ]; do
 done
 if [ "$RETRIES" -gt "$LIMIT" ]; then
   echo "[ERROR] All Retries Exhausted!"
-  exit 0
+  exit 1
 fi
+#TODO: Fix the code so that when retries exhaust, terraform shows error

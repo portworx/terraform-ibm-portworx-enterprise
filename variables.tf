@@ -5,11 +5,6 @@ variable "ibmcloud_api_key" {
   sensitive   = true
 }
 
-variable "unique_id" {
-  description = "Unique identifiers for all created resources"
-  type        = string
-}
-
 variable "cluster_name" {
   description = "Name of existing roks cluster"
   type        = string

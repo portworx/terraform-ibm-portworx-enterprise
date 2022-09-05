@@ -26,7 +26,7 @@ echo "[INFO] Listing releases ... "
 $CMD ls --namespace default --all
 echo "[INFO] Cleaning up portworx release..."
 $CMD delete portworx
-if [[ $? -ne 0 ]]; then
+if [[ $? -eq 0 ]]; then
     echo "[INFO] Successfully Un-Installed!!"
 else
     echo "[ERROR] Failed to Uninstall!!!"
