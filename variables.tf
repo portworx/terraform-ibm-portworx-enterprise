@@ -10,12 +10,6 @@ variable "cluster_name" {
   type        = string
 }
 
-variable "kube_config_path" {
-  description = "Path to store k8s config file: ex `~/.kube/config`"
-  type        = string
-  default     = "~/.kube/config"
-}
-
 variable "resource_group" {
   description = "Resource group of existing cluster"
   type        = string
@@ -57,43 +51,37 @@ variable "secret_type" {
   default     = "k8s"
 }
 
-variable "delete_portworx_pvcs" {
-  description = "secret type"
+variable "use_cloud_drives" {
   type        = bool
+  description = "(optional) describe your variable"
   default     = false
 }
-
-variable "use_cloud_drives" {
-  type = bool
-  description = "(optional) describe your variable"
-  default = false
-}
 variable "max_storage_node_per_zone" {
-  type = number
+  type        = number
   description = "(optional) describe your variable"
-  default = 1
+  default     = 1
 }
 
 variable "num_cloud_drives" {
-  type = number
+  type        = number
   description = "(optional) describe your variable"
-  default = 1
+  default     = 1
 }
 
 variable "cloud_drives_sizes" {
-  type = list(number)
+  type        = list(number)
   description = "(optional) describe your variable"
-  default = [ 100, 100, 100 ]
+  default     = [100, 100, 100]
 }
 
-variable "storage_class" {
-  type = list(string)
+variable "storage_classes" {
+  type        = list(string)
   description = "(optional) describe your variable"
-  default = [ "ibmc-vpc-block-10iops-tier", "ibmc-vpc-block-10iops-tier", "ibmc-vpc-block-10iops-tier" ]
+  default     = ["ibmc-vpc-block-10iops-tier", "ibmc-vpc-block-10iops-tier", "ibmc-vpc-block-10iops-tier"]
 }
 
 variable "csi" {
-  type = bool
+  type        = bool
   description = "(optional) describe your variable"
-  default = false
+  default     = false
 }

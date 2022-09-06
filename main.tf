@@ -31,9 +31,9 @@ resource "ibm_resource_instance" "portworx" {
     size                      = element(var.cloud_drives_sizes, 0)
     size2                     = (var.num_cloud_drives == 2) ? element(var.cloud_drives_sizes, 1) : 0
     size3                     = (var.num_cloud_drives == 3) ? element(var.cloud_drives_sizes, 2) : 0
-    storageClassName          = element(var.storage_class, 0)
-    storageClassName2         = (var.num_cloud_drives == 2) ? element(var.storage_class, 1) : ""
-    storageClassName3         = (var.num_cloud_drives == 3) ? element(var.storage_class, 2) : ""
+    storageClassName          = element(var.storage_classes, 0)
+    storageClassName2         = (var.num_cloud_drives == 2) ? element(var.storage_classes, 1) : ""
+    storageClassName3         = (var.num_cloud_drives == 3) ? element(var.storage_classes, 2) : ""
     csi                       = var.csi ? "True" : "False"
     //TODO: fix csi boolean issue
   }
