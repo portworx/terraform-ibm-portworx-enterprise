@@ -5,11 +5,6 @@ variable "ibmcloud_api_key" {
   sensitive   = true
 }
 
-variable "unique_id" {
-  description = "Unique identifiers for all created resources"
-  type        = string
-}
-
 variable "cluster_name" {
   description = "Name of existing roks cluster"
   type        = string
@@ -60,4 +55,45 @@ variable "secret_type" {
   description = "secret type"
   type        = string
   default     = "k8s"
+}
+
+variable "delete_portworx_pvcs" {
+  description = "secret type"
+  type        = bool
+  default     = false
+}
+
+variable "use_cloud_drives" {
+  type = bool
+  description = "(optional) describe your variable"
+  default = false
+}
+variable "max_storage_node_per_zone" {
+  type = number
+  description = "(optional) describe your variable"
+  default = 1
+}
+
+variable "num_cloud_drives" {
+  type = number
+  description = "(optional) describe your variable"
+  default = 1
+}
+
+variable "cloud_drives_sizes" {
+  type = list(number)
+  description = "(optional) describe your variable"
+  default = [ 100, 100, 100 ]
+}
+
+variable "storage_class" {
+  type = list(string)
+  description = "(optional) describe your variable"
+  default = [ "ibmc-vpc-block-10iops-tier", "ibmc-vpc-block-10iops-tier", "ibmc-vpc-block-10iops-tier" ]
+}
+
+variable "csi" {
+  type = bool
+  description = "(optional) describe your variable"
+  default = false
 }

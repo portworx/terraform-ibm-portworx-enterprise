@@ -1,5 +1,8 @@
+resource "random_uuid" "unique_id" {
+}
+
 resource "ibm_resource_instance" "portworx" {
-  name              = "${var.unique_id}-portworx-service"
+  name              = "portworx-service-${split("-", random_uuid.unique_id.result)[0]}"
   service           = "portworx"
   plan              = var.pwx_plan
   location          = var.region
@@ -7,27 +10,43 @@ resource "ibm_resource_instance" "portworx" {
 
   tags = [
     "clusterid:${data.ibm_container_vpc_cluster.cluster.id}",
+    "managed_by:terraform",
+    "cluster_name:${data.ibm_container_vpc_cluster.cluster.name}",
+    "owner:sudas"
   ]
+  //TODO: Recheck Tags
 
   parameters = {
-    apikey           = var.ibmcloud_api_key
-    cluster_name     = var.cluster_name
-    clusters         = data.ibm_container_vpc_cluster.cluster.id
-    etcd_endpoint    = var.use_external_etcd ? var.external_etcd_connection_url : null
-    etcd_secret      = var.use_external_etcd ? var.etcd_secret_name : null
-    internal_kvdb    = var.use_external_etcd ? "external" : "internal"
-    portworx_version = "Portworx: 2.6.2.1 , Stork: 2.6.0"
-    secret_type      = var.secret_type
+    apikey                    = var.ibmcloud_api_key
+    cluster_name              = var.cluster_name
+    clusters                  = var.cluster_name
+    etcd_endpoint             = var.use_external_etcd ? var.external_etcd_connection_url : null
+    etcd_secret               = var.use_external_etcd ? var.etcd_secret_name : null
+    internal_kvdb             = var.use_external_etcd ? "external" : "internal"
+    image_version             = "2.11.0"
+    secret_type               = var.secret_type
+    cloud_drive               = var.use_cloud_drives ? "Yes" : "No"
+    max_storage_node_per_zone = var.max_storage_node_per_zone
+    num_cloud_drives          = var.num_cloud_drives
+    size                      = element(var.cloud_drives_sizes, 0)
+    size2                     = (var.num_cloud_drives == 2) ? element(var.cloud_drives_sizes, 1) : 0
+    size3                     = (var.num_cloud_drives == 3) ? element(var.cloud_drives_sizes, 2) : 0
+    storageClassName          = element(var.storage_class, 0)
+    storageClassName2         = (var.num_cloud_drives == 2) ? element(var.storage_class, 1) : ""
+    storageClassName3         = (var.num_cloud_drives == 3) ? element(var.storage_class, 2) : ""
+    csi                       = var.csi ? "True" : "False"
+    //TODO: fix csi boolean issue
   }
 
   provisioner "local-exec" {
-    command     = "/bin/bash ${path.module}/utils/portworx_wait_until_ready.sh"
+    working_dir = "${path.module}/utils/"
+    command     = "/bin/bash portworx_wait_until_ready.sh"
   }
 }
 resource "null_resource" "portworx_destroy" {
   provisioner "local-exec" {
-    when    = destroy
+    when        = destroy
     working_dir = "${path.module}/utils/"
-    command = "/bin/bash ${path.module}/utils/portworx_destroy.sh"
+    command     = "/bin/bash portworx_destroy.sh"
   }
 }
