@@ -5,4 +5,5 @@ module "portworx-enterprise" {
   cluster_name   = var.iks_cluster_name
   resource_group = var.resource_group
   use_cloud_drives = var.use_cloud_drives
+  classic_infra = var.classic_infra
 }
