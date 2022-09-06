@@ -57,9 +57,9 @@ resource "ibm_resource_instance" "portworx_on_classic" {
   resource_group_id = data.ibm_resource_group.group.id
 
   tags = [
-    "clusterid:${data.ibm_container_cluster_worker.cluster_classic[0].id}",
+    "clusterid:${data.ibm_container_cluster.cluster_classic[0].id}",
     "managed_by:terraform",
-    "cluster_name:${data.ibm_container_cluster_worker.cluster_classic[0].name}",
+    "cluster_name:${data.ibm_container_cluster.cluster_classic[0].name}",
     "owner:sudas"
   ]
   //TODO: Recheck Tags

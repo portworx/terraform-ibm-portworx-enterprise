@@ -1,3 +1,3 @@
 output "portworx_is_ready" {
-  value = length(ibm_resource_instance.portworx) > 0 ? ibm_resource_instance.portworx.id : null
+  value = var.classic_infra ? ibm_resource_instance.portworx_on_classic.id : ibm_resource_instance.portworx.id
 }
