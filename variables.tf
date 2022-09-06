@@ -85,3 +85,8 @@ variable "csi" {
   description = "(optional) describe your variable"
   default     = false
 }
+variable "classic_infra" {
+  type = bool
+  description = "(optional) describe your variable"
+  default     = false
+}
