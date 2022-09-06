@@ -25,3 +25,9 @@ variable "use_cloud_drives" {
   description = "(optional) describe your variable"
   default = false
 }
+
+variable "classic_infra" {
+  type = bool
+  default = false
+  description = "(optional) describe your variable"
+}

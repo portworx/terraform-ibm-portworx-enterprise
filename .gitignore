@@ -38,3 +38,4 @@ terraform.rc
 **/*_k8sconfig
 **/.terragrunt-cache
 **/.terraform.lock.hcl
+**/terragrunt.hcl
