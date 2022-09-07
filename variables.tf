@@ -90,3 +90,8 @@ variable "classic_infra" {
   description = "(optional) describe your variable"
   default     = false
 }
+variable "portworx_version" {
+  type = string
+  default = "2.11.0"
+  description = "(optional) describe your variable"
+}

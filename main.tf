@@ -71,7 +71,7 @@ resource "ibm_resource_instance" "portworx_on_classic" {
     etcd_endpoint             = var.use_external_etcd ? var.external_etcd_connection_url : null
     etcd_secret               = var.use_external_etcd ? var.etcd_secret_name : null
     internal_kvdb             = var.use_external_etcd ? "external" : "internal"
-    image_version             = "2.11.0"
+    image_version             = var.portworx_version
     secret_type               = var.secret_type
     csi                       = var.csi ? "True" : "False"
     //TODO: fix csi boolean issue
