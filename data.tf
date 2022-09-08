@@ -35,7 +35,7 @@ locals {
     apikey                    = var.ibmcloud_api_key,
     cluster_name              = var.cluster_name,
     clusters                  = var.cluster_name,
-    etcd_endpoint             = var.use_external_etcd ? external_etcd_connection_url : null,
+    etcd_endpoint             = var.use_external_etcd ? var.external_etcd_connection_url : null,
     etcd_secret               = var.use_external_etcd ? var.etcd_secret_name : null,
     internal_kvdb             = var.use_external_etcd ? "external" : "internal",
     image_version             = var.portworx_version,
