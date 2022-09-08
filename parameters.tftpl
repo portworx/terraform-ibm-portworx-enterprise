@@ -1,22 +1,3 @@
 {
-    apikey                    = ${ibmcloud_api_key}
-    cluster_name              = ${cluster_name}
-    clusters                  = ${cluster_name}
-    etcd_endpoint             = ${etcd_endpoint}
-    etcd_secret               = ${etcd_secret}
-    internal_kvdb             = ${internal_kvdb}
-    image_version             = ${image_version}
-    secret_type               = ${secret_type}
-    csi                       = ${csi}
-    %{ if use_cloud_drives == "Yes" }
-        cloud_drive               = ${use_cloud_drives}
-        max_storage_node_per_zone = ${max_storage_node_per_zone}
-        num_cloud_drives          = ${num_cloud_drives}
-        size                      = ${size}
-        size2                     = ${size2}
-        size3                     = ${size3}
-        storageClassName          = ${storageClassName}
-        storageClassName2         = ${storageClassName2}
-        storageClassName3         = ${storageClassName3}
-    %{ endif }  
+    apikey                    = ${params.ibmcloud_api_key}
 }
