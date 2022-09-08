@@ -95,3 +95,9 @@ variable "portworx_version" {
   default = "2.11.0"
   description = "(optional) describe your variable"
 }
+
+variable "upgrade_portworx" {
+  type = bool
+  description = "(optional) describe your variable"
+  default = false
+}
