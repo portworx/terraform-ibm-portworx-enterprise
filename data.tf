@@ -32,7 +32,7 @@ data "ibm_container_cluster_worker" "worker_classic" {
 locals {
   cluster_ref = var.classic_infra ? data.ibm_container_cluster.cluster_classic[0] : data.ibm_container_vpc_cluster.cluster[0]
   params = {
-    apikey                    = var.ibmcloud_api_key,
+    ibmcloud_api_key          = var.ibmcloud_api_key,
     cluster_name              = var.cluster_name,
     clusters                  = var.cluster_name,
     etcd_endpoint             = var.use_external_etcd ? var.external_etcd_connection_url : null,
