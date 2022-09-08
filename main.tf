@@ -6,7 +6,6 @@ resource "ibm_resource_instance" "portworx" {
   plan              = var.pwx_plan
   location          = var.region
   resource_group_id = data.ibm_resource_group.group.id
-  force_recreate = true
 
   tags = [
     "clusterid:${local.cluster_ref.id}",
@@ -45,6 +44,7 @@ resource "ibm_resource_instance" "portworx" {
 }
 
 resource "null_resource" "portworx_destroy" {
+  count = var.upgrade_portworx ? 0 : 1
   provisioner "local-exec" {
     when        = destroy
     working_dir = "${path.module}/utils/"
