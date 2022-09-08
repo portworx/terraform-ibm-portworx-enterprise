@@ -14,9 +14,9 @@ resource "ibm_resource_instance" "portworx" {
     "owner:sudas"
   ]
   //TODO: Recheck Tags
-  parameters = templatefile("${path.module}/parameters.tftpl", local.params)
+  parameters = templatefile("${path.module}/parameters.tftpl", { params = local.params })
   //TODO: fix csi boolean issue
-  
+
 
   provisioner "local-exec" {
     working_dir = "${path.module}/utils/"
