@@ -7,4 +7,5 @@ module "portworx-enterprise" {
   use_cloud_drives = var.use_cloud_drives
   classic_infra = var.classic_infra
   portworx_version = var.portworx_version
+  upgrade_portworx = var.upgrade_portworx
 }
