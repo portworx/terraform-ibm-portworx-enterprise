@@ -52,7 +52,7 @@ resource "ibm_resource_instance" "portworx" {
 resource "null_resource" "portworx_upgrade" {
   provisioner "local-exec" {
     working_dir = "${path.module}/utils/"
-    command     = "/bin/bash portworx_upgrade.sh ${var.portworx_version} ${var.portworx_upgrade}"
+    command     = "/bin/bash portworx_upgrade.sh ${var.portworx_version} ${var.upgrade_portworx}"
   }
 }
 
