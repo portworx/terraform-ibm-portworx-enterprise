@@ -33,6 +33,6 @@ $CMD repo add community https://raw.githubusercontent.com/IBM/charts/master/repo
 $CMD repo update
 $CMD get values portworx -n default > /tmp/values.yaml
 sed -i -E -e 's@PX_IMAGE=icr.io/ext/portworx/px-enterprise:.*$@PX_IMAGE=icr.io/ext/portworx/px-enterprise:'"$IMAGE_VERSION"'@g' /tmp/values.yaml
-$CMD upgrade portworx community/portworx -f /tmp/values.yaml --set imageVersion=$IMAGE_VERSION --wait --timeout 10m0s
+$CMD upgrade portworx community/portworx -f /tmp/values.yaml --set imageVersion=$IMAGE_VERSION --wait --timeout 20m0s
 
 #TODO: Fail if pods are not up, will have to use kubectl get status and all
