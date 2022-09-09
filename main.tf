@@ -45,7 +45,7 @@ resource "ibm_resource_instance" "portworx" {
 
   lifecycle {
     ignore_changes = [
-      parameters.image_version
+      parameters["image_version"]
     ]
   }
 }
