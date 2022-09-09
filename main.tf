@@ -42,6 +42,12 @@ resource "ibm_resource_instance" "portworx" {
     working_dir = "${path.module}/utils/"
     command     = "/bin/bash portworx_wait_until_ready.sh"
   }
+
+  lifecycle {
+    ignore_changes = [
+      parameters.image_version
+    ]
+  }
 }
 
 resource "null_resource" "portworx_upgrade" {
