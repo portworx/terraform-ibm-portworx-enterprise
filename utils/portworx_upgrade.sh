@@ -15,4 +15,5 @@ if [ "$VERSION" == "" ]; then
 fi
 
 $CMD get values portworx -n default > /tmp/values.yaml
-$CMD upgrade portworx -n default -f /tmp/values.yaml --set imageVersion=$1 
+sed -i -E -e 's@PX_IMAGE=icr.io/ext/portworx/px-enterprise:.*$@PX_IMAGE=icr.io/ext/portworx/px-enterprise:'"$1"'@g' /tmp/values.yaml
+$CMD upgrade portworx -f /tmp/values.yaml --set imageVersion=$1 

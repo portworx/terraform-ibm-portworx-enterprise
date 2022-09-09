@@ -27,13 +27,6 @@ data "ibm_container_cluster_worker" "worker_classic" {
   resource_group_id = data.ibm_resource_group.group.id
 }
 
-
-data "kubernetes_namespace_v1" "kube_system" {
-  metadata {
-    name = "kube-system"
-  }
-}
-
 locals {
   cluster_ref = var.classic_infra ? data.ibm_container_cluster.cluster_classic[0] : data.ibm_container_vpc_cluster.cluster[0]
 }

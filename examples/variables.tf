@@ -44,12 +44,3 @@ variable "upgrade_portworx" {
   default = false
 }
 
-variable "kubeconfig_path" {
-  type = string
-  default = "~/.kube/config"
-}
-
-variable "k8s_context" {
-  type = string
-  default = "sudas-px-tf-cd-fc83a3e7-vanilla/ccd1v21w0la9la8d263g/admin"
-}
