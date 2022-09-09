@@ -1,7 +1,6 @@
 resource "random_uuid" "unique_id" {
 }
 resource "ibm_resource_instance" "portworx" {
-  count = var.upgrade_portworx ? 0 : 1
   name              = "portworx-service-${split("-", random_uuid.unique_id.result)[0]}"
   service           = "portworx"
   plan              = var.pwx_plan
@@ -51,16 +50,14 @@ resource "ibm_resource_instance" "portworx" {
 }
 
 resource "null_resource" "portworx_upgrade" {
-  count = var.upgrade_portworx ? 1 : 0
   provisioner "local-exec" {
     working_dir = "${path.module}/utils/"
-    command     = "/bin/bash portworx_upgrade.sh"
+    command     = "/bin/bash portworx_upgrade.sh ${var.portworx_version} ${var.portworx_upgrade}"
   }
 }
 
 
 resource "null_resource" "portworx_destroy" {
-  count = var.upgrade_portworx ? 0 : 1
   provisioner "local-exec" {
     when        = destroy
     working_dir = "${path.module}/utils/"

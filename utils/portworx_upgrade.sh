@@ -1,4 +1,16 @@
 #!/bin/bash
+IMAGE_VERSION=$1
+UPGRADE_REQUESTED=$2
+
+if $UPGRADE_REQUESTED
+then
+    echo "Portworx-Enterprise Upgrade Requested!!"
+else
+    echo "No Upgrade Requested!!"
+    exit 0
+fi
+
+
 echo "[INFO] Kube Config Path: $CONFIGPATH"
 export KUBECONFIG=$CONFIGPATH
 kubectl config current-context
@@ -15,5 +27,5 @@ if [ "$VERSION" == "" ]; then
 fi
 
 $CMD get values portworx -n default > /tmp/values.yaml
-sed -i -E -e 's@PX_IMAGE=icr.io/ext/portworx/px-enterprise:.*$@PX_IMAGE=icr.io/ext/portworx/px-enterprise:'"$1"'@g' /tmp/values.yaml
-$CMD upgrade portworx -f /tmp/values.yaml --set imageVersion=$1 
+sed -i -E -e 's@PX_IMAGE=icr.io/ext/portworx/px-enterprise:.*$@PX_IMAGE=icr.io/ext/portworx/px-enterprise:'"$IMAGE_VERSION"'@g' /tmp/values.yaml
+$CMD upgrade portworx -f /tmp/values.yaml --set imageVersion=$IMAGE_VERSION
