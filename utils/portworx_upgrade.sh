@@ -25,7 +25,7 @@ if [ "$VERSION" == "" ]; then
     CMD="/tmp/helm3/linux-amd64/helm"
     $CMD version
 fi
-
+$CMD repo add community https://raw.githubusercontent.com/IBM/charts/master/repo/community
 $CMD get values portworx -n default > /tmp/values.yaml
 sed -i -E -e 's@PX_IMAGE=icr.io/ext/portworx/px-enterprise:.*$@PX_IMAGE=icr.io/ext/portworx/px-enterprise:'"$IMAGE_VERSION"'@g' /tmp/values.yaml
-$CMD upgrade portworx -f /tmp/values.yaml --set imageVersion=$IMAGE_VERSION
+$CMD upgrade portworx community/portworx -f /tmp/values.yaml --set imageVersion=$IMAGE_VERSION
