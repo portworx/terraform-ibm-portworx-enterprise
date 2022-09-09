@@ -50,6 +50,9 @@ resource "ibm_resource_instance" "portworx" {
 }
 
 resource "null_resource" "portworx_upgrade" {
+  triggers = {
+    always_run = var.upgrade_portworx
+  }
   provisioner "local-exec" {
     working_dir = "${path.module}/utils/"
     command     = "/bin/bash portworx_upgrade.sh ${var.portworx_version} ${var.upgrade_portworx}"
