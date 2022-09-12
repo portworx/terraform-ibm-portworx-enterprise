@@ -7,4 +7,8 @@ module "portworx-enterprise" {
   classic_infra = var.classic_infra
   portworx_version = var.portworx_version
   upgrade_portworx = var.upgrade_portworx
+  max_storage_node_per_zone = var.max_storage_node_per_zone
+  num_cloud_drives = var.num_cloud_drives
+  cloud_drives_sizes = var.cloud_drives_sizes
+  storage_classes = var.storage_classes
 }
