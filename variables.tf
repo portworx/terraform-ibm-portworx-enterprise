@@ -1,4 +1,3 @@
-//TODO: Add Descriptions
 variable "ibmcloud_api_key" {
   description = "Get the ibmcloud api key from https://cloud.ibm.com/iam/apikeys"
   type        = string
@@ -6,19 +5,19 @@ variable "ibmcloud_api_key" {
 }
 
 variable "cluster_name" {
-  description = "Name of existing roks cluster"
+  description = "Name of existing IKS cluster"
   type        = string
 }
 
 variable "resource_group" {
-  description = "Resource group of existing cluster"
+  description = "Resource group of existing IKS Cluster "
   type        = string
 }
 
 variable "use_external_etcd" {
   type        = bool
   default     = false
-  description = "Do you want to create an external_etcd? `True` or `False`"
+  description = "Do you want to create an external_etcd? `true` or `false`"
 }
 
 variable "etcd_secret_name" {
@@ -33,7 +32,6 @@ variable "external_etcd_connection_url" {
   default     = null
 }
 
-
 variable "region" {
   description = "The region Portworx will be installed in: us-south, us-east, eu-gb, eu-de, jp-tok, au-syd, etc."
   default     = "us-east"
@@ -45,6 +43,7 @@ variable "pwx_plan" {
   type        = string
   default     = "px-enterprise"
 }
+
 variable "secret_type" {
   description = "secret type"
   type        = string
@@ -53,51 +52,67 @@ variable "secret_type" {
 
 variable "use_cloud_drives" {
   type        = bool
-  description = "(optional) describe your variable"
+  description = "Use Cloud Drives, `true` or `false`"
   default     = false
 }
+
 variable "max_storage_node_per_zone" {
   type        = number
-  description = "(optional) describe your variable"
+  description = "Maximum number of strorage nodes per zone"
   default     = 1
 }
 
 variable "num_cloud_drives" {
   type        = number
-  description = "(optional) describe your variable"
+  description = "Number of cloud drives per zone"
   default     = 1
 }
 
 variable "cloud_drives_sizes" {
   type        = list(number)
-  description = "(optional) describe your variable"
+  description = "Size of Cloud Drive in GB, ex: [50, 60, 70]"
   default     = [100, 100, 100]
 }
 
 variable "storage_classes" {
   type        = list(string)
-  description = "(optional) describe your variable"
+  description = "Storage Classes for each cloud drive"
   default     = ["ibmc-vpc-block-10iops-tier", "ibmc-vpc-block-10iops-tier", "ibmc-vpc-block-10iops-tier"]
 }
 
 variable "csi" {
   type        = bool
-  description = "(optional) describe your variable"
+  description = "Enable CSI, `true` or `false`"
   default     = false
 }
+
 variable "classic_infra" {
-  type = bool
-  description = "(optional) describe your variable"
+  type        = bool
+  description = "IKS is on classic infra, `true` or `false`"
   default     = false
 }
+
 variable "portworx_version" {
-  type = string
-  default = "2.11.0"
-  description = "(optional) describe your variable"
+  type        = string
+  default     = "2.11.0"
+  description = "Image Version of Portworx Enterprise"
 }
 
 variable "upgrade_portworx" {
-  type = bool
-  description = "(optional) describe your variable"
-  default = false
+  type        = bool
+  description = "Upgrade Portworx Version to the respective `portworx_version`, `true` or `false`"
+  default     = false
+}
+
+variable "portworx_service_name" {
+  type        = string
+  description = "Name to be provided to the portworx cluster to be deployed"
+  default     = "portworx-service"
+}
+
+
+variable "tags" {
+  type = list(string)
+  description = "Optional Tags to be add, if required."
+  default = []
 }

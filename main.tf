@@ -1,19 +1,18 @@
 resource "random_uuid" "unique_id" {
 }
 resource "ibm_resource_instance" "portworx" {
-  name              = "portworx-service-${split("-", random_uuid.unique_id.result)[0]}"
+  name              = "${var.portworx_service_name}-${split("-", random_uuid.unique_id.result)[0]}"
   service           = "portworx"
   plan              = var.pwx_plan
   location          = var.region
   resource_group_id = data.ibm_resource_group.group.id
 
-  tags = [
+  tags = concat([
     "clusterid:${local.cluster_ref.id}",
     "managed_by:terraform",
-    "cluster_name:${local.cluster_ref.name}",
-    "owner:sudas"
-  ]
-  //TODO: Recheck Tags
+    "cluster_name:${local.cluster_ref.name}"
+  ], var.tags)
+  
   parameters = {
     apikey                    = var.ibmcloud_api_key,
     cluster_name              = var.cluster_name,
@@ -40,6 +39,7 @@ resource "ibm_resource_instance" "portworx" {
   provisioner "local-exec" {
     working_dir = "${path.module}/utils/"
     command     = "/bin/bash portworx_wait_until_ready.sh"
+    on_failure  = fail
   }
 
   lifecycle {
@@ -51,11 +51,12 @@ resource "ibm_resource_instance" "portworx" {
 
 resource "null_resource" "portworx_upgrade" {
   triggers = {
-    always_run =  "${timestamp()}"
+    always_run = "${timestamp()}"
   }
   provisioner "local-exec" {
     working_dir = "${path.module}/utils/"
     command     = "/bin/bash portworx_upgrade.sh ${var.portworx_version} ${var.upgrade_portworx}"
+    on_failure  = fail
   }
 }
 
@@ -65,5 +66,6 @@ resource "null_resource" "portworx_destroy" {
     when        = destroy
     working_dir = "${path.module}/utils/"
     command     = "/bin/bash portworx_destroy.sh"
+    on_failure  = fail
   }
 }
