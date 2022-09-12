@@ -3,7 +3,9 @@
 ## Pre-requisites
 - [Terragrunt](https://terragrunt.gruntwork.io/docs/getting-started/install/) and Terraform >= 0.13
 - Already Provisioned IKS Cluster
+- `ibmcloud` cli is not needed by the Terraform script but is needed to get the kubeconfig. e.g. `ibmcloud ks cluster config --admin --cluster <cluster_name | cluster_id>`
 - `kubectl` installed and pointed to the correct IKS Cluster
+- `jq` installed on the local machine
 
 
 ## Steps
@@ -35,6 +37,7 @@ Check the `examples/variables.tf` to understand what are the variables required
 ### Run the `terraform` scripts
 ```sh
 export IC_API_KEY="secret_ibm_cloud_key"
+ibmcloud ks cluster config --admin --cluster <cluster_name | cluster_id>
 cd roks-<example_name>
 terragrunt init -upgrade
 terragrunt plan -out tf.plan
