@@ -18,6 +18,7 @@ There are 6 examples which includes:
 
 ### Creating Variables
 Before you run the `terraform` scripts, you can use `terraform.tfvars` or `Environment Variables` or `-var` or `-var-file` in supplement with the examples. Refer to [Terraform Documentation](https://www.terraform.io/language/values/variables#assigning-values-to-root-module-variables)
+
 We shall use `terraform.tfvars` in these examples.
 
 >Example `terraform.tfvars` *(place it inside the examples/`required-example-directory`)*
