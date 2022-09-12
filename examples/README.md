@@ -23,7 +23,7 @@ Before you run the `terraform` scripts, you can use `terraform.tfvars` or `Envir
 
 We shall use `terraform.tfvars` in these examples.
 
->Example `terraform.tfvars` *(place it inside the examples/`required-example-directory`)*
+>Example `terraform.tfvars` *(place it inside the examples/`<roks|vanilla-example-directory>`)*
 ```terraform
 iks_cluster_name="your_cluster_name"
 resource_group="your_resource_group_name"
