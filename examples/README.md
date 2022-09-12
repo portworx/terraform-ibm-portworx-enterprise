@@ -38,7 +38,7 @@ Check the `examples/variables.tf` to understand what are the variables required
 ```sh
 export IC_API_KEY="secret_ibm_cloud_key"
 ibmcloud ks cluster config --admin --cluster <cluster_name | cluster_id>
-cd roks-<example_name>
+cd <path to any of the examples directory>
 terragrunt init -upgrade
 terragrunt plan -out tf.plan
 terragrunt apply tf.plan
