@@ -31,3 +31,16 @@ variable "classic_infra" {
   default = false
   description = "(optional) describe your variable"
 }
+
+variable "portworx_version" {
+  type = string
+  default = "2.11.0"
+  description = "(optional) describe your variable"
+}
+
+variable "upgrade_portworx" {
+  type = bool
+  description = "(optional) describe your variable"
+  default = false
+}
+

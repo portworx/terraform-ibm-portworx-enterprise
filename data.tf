@@ -1,5 +1,3 @@
-data "ibm_iam_auth_token" "token" {}
-
 data "ibm_resource_group" "group" {
   name = var.resource_group
 }
@@ -18,8 +16,8 @@ data "ibm_container_vpc_cluster_worker" "worker" {
 }
 
 data "ibm_container_cluster" "cluster_classic" {
-  count = var.classic_infra ? 1 : 0
-  name = var.cluster_name
+  count             = var.classic_infra ? 1 : 0
+  name              = var.cluster_name
   resource_group_id = data.ibm_resource_group.group.id
 }
 
@@ -27,4 +25,8 @@ data "ibm_container_cluster_worker" "worker_classic" {
   count             = var.classic_infra ? length(data.ibm_container_cluster.cluster_classic[0].workers) : 0
   worker_id         = element(data.ibm_container_cluster.cluster_classic[0].workers, count.index)
   resource_group_id = data.ibm_resource_group.group.id
+}
+
+locals {
+  cluster_ref = var.classic_infra ? data.ibm_container_cluster.cluster_classic[0] : data.ibm_container_vpc_cluster.cluster[0]
 }

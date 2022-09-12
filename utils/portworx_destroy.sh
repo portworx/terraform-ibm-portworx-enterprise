@@ -19,8 +19,8 @@ if [ "$VERSION" == "" ]; then
 fi
 
 echo "[INFO] Uninstalling Portworx from Cluster..."
-echo "[INFO] Trying to wipe entire Portworx Cluster.."
 wget "https://install.portworx.com/px-wipe" -O /tmp/px-wipe
+echo "[INFO] Trying to wipe entire Portworx Cluster.."
 bash /tmp/px-wipe -f
 echo "[INFO] Listing releases ... "
 $CMD ls --namespace default --all
