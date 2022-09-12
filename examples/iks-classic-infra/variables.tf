@@ -1,18 +1,14 @@
-//TODO: Add Descriptions
 variable "region" {
-  type        = string
-  description = "(optional) describe your variable"
-  default     = "us-east"
+  type    = string
+  default = "us-east"
 }
 
 variable "iks_cluster_name" {
-  type        = string
-  description = "(optional) describe your variable"
+  type = string
 }
 
 variable "resource_group" {
-  type        = string
-  description = "(optional) describe your variable"
+  type = string
 }
 
 variable "ibmcloud_api_key" {
@@ -21,26 +17,22 @@ variable "ibmcloud_api_key" {
   sensitive   = true
 }
 variable "use_cloud_drives" {
-  type = bool
-  description = "(optional) describe your variable"
+  type    = bool
   default = false
 }
 
 variable "classic_infra" {
-  type = bool
+  type    = bool
   default = false
-  description = "(optional) describe your variable"
 }
 
 variable "portworx_version" {
-  type = string
+  type    = string
   default = "2.11.0"
-  description = "(optional) describe your variable"
 }
 
 variable "upgrade_portworx" {
-  type = bool
-  description = "(optional) describe your variable"
+  type    = bool
   default = false
 }
 
