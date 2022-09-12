@@ -34,7 +34,7 @@ Check the `examples/variables.tf` to understand what are the variables required
 
 ### Run the `terraform` scripts
 ```sh
-export IC_API_KEY="ibm_api_key"
+export IC_API_KEY="secret_ibm_cloud_key"
 cd roks-<example_name>
 terragrunt init -upgrade
 terragrunt plan -out tf.plan
