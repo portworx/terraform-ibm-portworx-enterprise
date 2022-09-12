@@ -23,7 +23,7 @@ We shall use `terraform.tfvars` in these examples.
 >Example `terraform.tfvars` *(place it inside the examples/`required-example-directory`)*
 ```terraform
 iks_cluster_name="your_cluster_name"
-resource_group="yout_resource_group_name"
+resource_group="your_resource_group_name"
 ibmcloud_api_key="secret_ibm_cloud_key"
 use_cloud_drives=true
 portworx_version="2.11.0"
