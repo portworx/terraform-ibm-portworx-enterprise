@@ -9,7 +9,7 @@ resource "ibm_resource_instance" "portworx" {
 
   tags = concat([
     "clusterid:${local.cluster_ref.id}",
-    "managed_by:terraform",
+    "managed_by:portworx_enterprise_terraform",
     "cluster_name:${local.cluster_ref.name}"
   ], var.tags)
   
@@ -22,7 +22,7 @@ resource "ibm_resource_instance" "portworx" {
     internal_kvdb             = var.use_external_etcd ? "external" : "internal",
     image_version             = var.portworx_version,
     secret_type               = var.secret_type,
-    csi                       = var.csi ? "True" : "False",
+    csi                       = var.portworx_csi ? "True" : "False",
     cloud_drive               = var.use_cloud_drives ? "Yes" : "No",
     max_storage_node_per_zone = var.max_storage_node_per_zone,
     num_cloud_drives          = var.num_cloud_drives,
@@ -51,7 +51,7 @@ resource "ibm_resource_instance" "portworx" {
 
 resource "null_resource" "portworx_upgrade" {
   triggers = {
-    always_run = "${timestamp()}"
+    condition = var.upgrade_portworx
   }
   provisioner "local-exec" {
     working_dir = "${path.module}/utils/"
