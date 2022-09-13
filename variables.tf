@@ -27,20 +27,12 @@ variable "etcd_secret_name" {
   type        = string
   description = "The name of etcd secret certificate, required only when external etcd is used"
   default     = null
-  validation {
-    condition     = var.use_external_etcd
-    error_message = "The value of `etcd_secret_name` should only be set when `use_external_etcd` is set to `true`"
-  }
 }
 
 variable "external_etcd_connection_url" {
   type        = string
   description = "The connection string with port number for the etcd, required only when external etcd is used"
   default     = null
-  validation {
-    condition     = var.use_external_etcd
-    error_message = "The value of `external_etcd_connection_url` should only be set when `use_external_etcd` is set to `true`"
-  }
 }
 
 variable "region" {
@@ -90,12 +82,8 @@ variable "num_cloud_drives" {
 
 variable "cloud_drives_sizes" {
   type        = list(number)
-  description = "Size of Cloud Drive in GB, ex: [50, 60, 70]"
+  description = "Size of Cloud Drive in GB, ex: [50, 60, 70], the number of elements should be same as the value of `num_cloud_drives`"
   default     = [100]
-  validation {
-    condition     = length(var.cloud_drives_sizes) == var.num_cloud_drives
-    error_message = "The value of `cloud_drives_sizes` should be a list of number and the number of elements should be same as the value of `num_cloud_drives`"
-  }
 }
 
 variable "storage_classes" {
