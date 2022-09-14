@@ -1,3 +1,8 @@
+resource "null_resource" "preflight_checks" {
+  working_dir = "${path.module}/utils/"
+  command     = "/bin/bash preflight_node_health.sh"
+  on_failure  = fail
+}
 resource "random_uuid" "unique_id" {
 }
 resource "ibm_resource_instance" "portworx" {
