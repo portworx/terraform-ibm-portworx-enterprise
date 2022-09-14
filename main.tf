@@ -42,6 +42,11 @@ resource "ibm_resource_instance" "portworx" {
   }
   //TODO: fix csi boolean issue
   provisioner "local-exec" {
+    working_dir = "${path.module}/utils/"
+    command     = "/bin/bash portworx_wait_until_ready.sh"
+    on_failure  = fail
+  }
+  provisioner "local-exec" {
     when        = destroy
     working_dir = "${path.module}/utils/"
     command     = "/bin/bash portworx_destroy.sh"
@@ -57,16 +62,6 @@ resource "ibm_resource_instance" "portworx" {
   ]
 }
 
-resource "null_resource" "wait_for_portworx" {
-  provisioner "local-exec" {
-    working_dir = "${path.module}/utils/"
-    command     = "/bin/bash portworx_wait_until_ready.sh"
-    on_failure  = fail
-  }
-  depends_on = [
-    ibm_resource_instance.portworx
-  ]
-}
 resource "null_resource" "portworx_upgrade" {
   triggers = {
     condition = timestamp()
