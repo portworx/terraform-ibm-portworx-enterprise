@@ -6,6 +6,9 @@ SLEEP_TIME=5
 LIMIT=10
 echo '[INFO] Trying to read Portworx Daemon Set Status...'
 
+echo "[INFO] Kube Config Path: $CONFIGPATH"
+export KUBECONFIG=$CONFIGPATH
+echo "Current Kube Context: $(kubectl config current-context)"
 
 RETRIES=0
 while [ "$RETRIES" -le "$LIMIT" ]; do

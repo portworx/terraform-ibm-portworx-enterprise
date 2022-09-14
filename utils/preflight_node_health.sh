@@ -3,7 +3,7 @@
 echo "[INFO] Kube Config Path: $CONFIGPATH"
 export KUBECONFIG=$CONFIGPATH
 echo "Current Kube Context: $(kubectl config current-context)"
-
+#TODO: validate current cluster name with input
 MIN_STORAGE=62500000
 MIN_CPU=4
 MIN_MEMORY=3906250
