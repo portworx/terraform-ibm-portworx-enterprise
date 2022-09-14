@@ -18,7 +18,7 @@ variable "ibmcloud_api_key" {
 }
 variable "use_cloud_drives" {
   type    = bool
-  default = false
+  default = true
 }
 
 variable "classic_infra" {
