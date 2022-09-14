@@ -1,5 +1,5 @@
 resource "null_resource" "preflight_checks" {
-    provisioner "local-exec" {
+  provisioner "local-exec" {
     working_dir = "${path.module}/utils/"
     command     = "/bin/bash preflight_node_health.sh"
     on_failure  = fail
@@ -41,14 +41,12 @@ resource "ibm_resource_instance" "portworx" {
     storageClassName3         = (var.num_cloud_drives == 3) ? element(var.storage_classes, 2) : ""
   }
   //TODO: fix csi boolean issue
-
-
   provisioner "local-exec" {
+    when        = destroy
     working_dir = "${path.module}/utils/"
-    command     = "/bin/bash portworx_wait_until_ready.sh"
+    command     = "/bin/bash portworx_destroy.sh"
     on_failure  = fail
   }
-
   lifecycle {
     ignore_changes = [
       parameters["image_version"]
@@ -59,6 +57,16 @@ resource "ibm_resource_instance" "portworx" {
   ]
 }
 
+resource "null_resource" "wait_for_portworx" {
+  provisioner "local-exec" {
+    working_dir = "${path.module}/utils/"
+    command     = "/bin/bash portworx_wait_until_ready.sh"
+    on_failure  = fail
+  }
+  depends_on = [
+    ibm_resource_instance.portworx
+  ]
+}
 resource "null_resource" "portworx_upgrade" {
   triggers = {
     condition = timestamp()
@@ -66,16 +74,6 @@ resource "null_resource" "portworx_upgrade" {
   provisioner "local-exec" {
     working_dir = "${path.module}/utils/"
     command     = "/bin/bash portworx_upgrade.sh ${var.portworx_version} ${var.upgrade_portworx}"
-    on_failure  = fail
-  }
-}
-
-
-resource "null_resource" "portworx_destroy" {
-  provisioner "local-exec" {
-    when        = destroy
-    working_dir = "${path.module}/utils/"
-    command     = "/bin/bash portworx_destroy.sh"
     on_failure  = fail
   }
 }
