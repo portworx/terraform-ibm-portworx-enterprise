@@ -51,7 +51,7 @@ resource "ibm_resource_instance" "portworx" {
 
 resource "null_resource" "portworx_upgrade" {
   triggers = {
-    version = ibm_resource_instance.portworx.parameters["image_version"]
+    condition = timestamp()
   }
   provisioner "local-exec" {
     working_dir = "${path.module}/utils/"
