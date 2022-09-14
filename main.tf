@@ -1,7 +1,9 @@
 resource "null_resource" "preflight_checks" {
-  working_dir = "${path.module}/utils/"
-  command     = "/bin/bash preflight_node_health.sh"
-  on_failure  = fail
+    provisioner "local-exec" {
+    working_dir = "${path.module}/utils/"
+    command     = "/bin/bash preflight_node_health.sh"
+    on_failure  = fail
+  }
 }
 resource "random_uuid" "unique_id" {
 }
@@ -17,7 +19,7 @@ resource "ibm_resource_instance" "portworx" {
     "managed_by:portworx_enterprise_terraform",
     "cluster_name:${local.cluster_ref.name}"
   ], var.tags)
-  
+
   parameters = {
     apikey                    = var.ibmcloud_api_key,
     cluster_name              = var.cluster_name,
