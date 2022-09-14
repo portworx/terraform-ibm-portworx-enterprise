@@ -7,7 +7,7 @@ resource "null_resource" "preflight_checks" {
 }
 resource "random_uuid" "unique_id" {
 }
-resource "ibm_resource_instance" "portworx" {
+resource "ibm_resource_instance" "portworx_enterprise" {
   name              = "${var.portworx_service_name}-${split("-", random_uuid.unique_id.result)[0]}"
   service           = "portworx"
   plan              = var.pwx_plan
@@ -54,6 +54,9 @@ resource "ibm_resource_instance" "portworx" {
       parameters["image_version"]
     ]
   }
+  depends_on = [
+    null_resource.preflight_checks
+  ]
 }
 
 resource "null_resource" "portworx_upgrade" {
