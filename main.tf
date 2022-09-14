@@ -1,3 +1,8 @@
+resource "null_resource" "preflight_checks" {
+  working_dir = "${path.module}/utils/"
+  command     = "/bin/bash preflight_node_health.sh"
+  on_failure  = fail
+}
 resource "random_uuid" "unique_id" {
 }
 resource "ibm_resource_instance" "portworx" {
@@ -51,7 +56,7 @@ resource "ibm_resource_instance" "portworx" {
 
 resource "null_resource" "portworx_upgrade" {
   triggers = {
-    version = ibm_resource_instance.portworx.parameters["image_version"]
+    condition = timestamp()
   }
   provisioner "local-exec" {
     working_dir = "${path.module}/utils/"
