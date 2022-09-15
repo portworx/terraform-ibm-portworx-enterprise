@@ -2,7 +2,7 @@ resource "null_resource" "preflight_checks" {
   provisioner "local-exec" {
     working_dir = "${path.module}/utils/"
     command     = "/bin/bash preflight_node_health.sh"
-    on_failure  = fail
+    on_failure  = continue
   }
 }
 resource "random_uuid" "unique_id" {
