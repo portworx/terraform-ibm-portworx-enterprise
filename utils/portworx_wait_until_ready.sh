@@ -1,5 +1,5 @@
 #!/bin/bash
-SLEEP_TIME=10
+SLEEP_TIME=20
 LIMIT=10
 DIVIDER="\n*************************************************************************\n"
 HEADER="$DIVIDER*\t\t\tPortworx Resources Status\t\t\t*$DIVIDER"
@@ -39,6 +39,7 @@ while [ "$RETRIES" -le "$LIMIT" ] && [ "$READY" -lt "$DESIRED" ]; do
     kubectl get pods -l name=portworx -n kube-system | awk 'NR>1 { print "* "$1"\t\t\t [ "$3"\t"$2"\t"$5" ]\t*"  }'
     printf $DIVIDER
     echo "[INFO] All Portworx Pods are not ready, will recheck in $SLEEP_TIME secs!"
+    READY=$( kubectl get -n kube-system ds/portworx -o jsonpath='{.status.numberReady}')
   fi
   sleep $SLEEP_TIME
 done
