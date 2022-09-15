@@ -31,10 +31,16 @@ fi
 
 RETRIES=0
 while [ "$RETRIES" -le "$LIMIT" ] && [ "$READY" -lt "$DESIRED" ]; do
-  ds_status=($(kubectl describe ds portworx -n kube-system | grep "Pods Status" | cut -d ":" -f 2))
-  printf "$HEADER*\t\t\t\tDaemonset Status\t\t\t*\n* portworx\t[ ${ds_status[*]} ]\t*$DIVIDER"
-  kubectl get pods -l name=portworx -n kube-system | awk 'NR>1 { print "* "$1"\t\t\t [ "$3"\t"$2"\t"$5" ]\t*"  }'
-  printf $DIVIDER
+  if ! ds_status=($(kubectl describe ds portworx -n kube-system | grep "Pods Status" | cut -d ":" -f 2)); then
+    echo "[WARN] Portworx Pods Status Not Found, will retry in $SLEEP_TIME secs!"
+    sleep $SLEEP_TIME
+    ((RETRIES++))
+  else
+    printf "$HEADER*\t\t\t\tDaemonset Status\t\t\t*\n* portworx\t[ ${ds_status[*]} ]\t*$DIVIDER"
+    kubectl get pods -l name=portworx -n kube-system | awk 'NR>1 { print "* "$1"\t\t\t [ "$3"\t"$2"\t"$5" ]\t*"  }'
+    printf $DIVIDER
+    break
+  fi
 done
 if [ "$RETRIES" -gt "$LIMIT" ]; then
   echo "[ERROR] All Retries Exhausted!"
@@ -49,6 +55,7 @@ while [ "$RETRIES" -le "$LIMIT" ]; do
   if ! STATUS=$(kubectl exec $PX_POD -n kube-system -- /opt/pwx/bin/pxctl status --json | jq -r '.status'); then
     echo "[WARN] Portworx Status Not Found, will retry in $SLEEP_TIME secs!"
     (( RETRIES++ ))
+    sleep $SLEEP_TIME
   elif [ "$STATUS" == "STATUS_OK" ]; then
     ds_status=($(kubectl describe ds portworx -n kube-system | grep "Pods Status" | cut -d ":" -f 2))
     printf "$HEADER*\t\t\t\tDaemonset Status\t\t\t*\n* portworx\t[ ${ds_status[*]} ]\t*$DIVIDER"
