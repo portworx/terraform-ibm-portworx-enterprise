@@ -1,24 +1,26 @@
 #!/bin/bash
-echo '**********************************************************************'
-echo '            Validating Portworx Enterprise Installation'
-echo '**********************************************************************'
-SLEEP_TIME=5
+SLEEP_TIME=10
 LIMIT=10
-echo '[INFO] Trying to read Portworx Daemon Set Status...'
+DIVIDER="\n*************************************************************************\n"
+HEADER="$DIVIDER*\t\t\tPortworx Resources Status\t\t\t*$DIVIDER"
 
 echo "[INFO] Kube Config Path: $CONFIGPATH"
 export KUBECONFIG=$CONFIGPATH
 echo "Current Kube Context: $(kubectl config current-context)"
+DESIRED=0
+READY=0
 
 RETRIES=0
 while [ "$RETRIES" -le "$LIMIT" ]; do
-  # Check if pods are ready
-  if ! DESIRED=$(kubectl get -n kube-system ds/portworx -o jsonpath='{.status.desiredNumberScheduled}'); then
-    echo "[WARN] Portworx Daemon Set Status Not Found, will retry in $SLEEP_TIME secs!"
+  if ! ds_state=($( kubectl get -n kube-system ds/portworx -o jsonpath='{.status.desiredNumberScheduled} {.status.numberReady}')); then
+    echo "[WARN] Portworx Daemon Set Not Found, will retry in $SLEEP_TIME secs!"
     sleep $SLEEP_TIME
     ((RETRIES++))
   else
-    echo '[INFO] Found Portworx Daemon Set Status...'
+    ds_status=($(kubectl describe ds portworx -n kube-system | grep "Pods Status" | cut -d ":" -f 2))
+    printf "$HEADER*\t\t\t\tDaemonset Status\t\t\t*\n* portworx\t[ ${ds_status[*]} ]\t*$DIVIDER"
+    DESIRED="${ds_state[0]}"
+    READY="${ds_state[1]}"
     break
   fi
 done
@@ -27,37 +29,12 @@ if [ "$RETRIES" -gt "$LIMIT" ]; then
   exit 1
 fi
 
-
 RETRIES=0
-while [ "$RETRIES" -le "$LIMIT" ]; do
-  if ! READY=$(kubectl get -n kube-system ds/portworx -o jsonpath='{.status.numberReady}'); then
-    echo "[WARN] Portworx Daemon Set Status Not Found, will retry in $SLEEP_TIME secs!"
-    (( RETRIES++ ))
-  elif [ "$DESIRED" -eq "$READY" ]; then
-    echo "[INFO] ($READY/$DESIRED) Pods Ready..."
-    break
-  elif [ "$DESIRED" -gt "$READY" ]; then
-    echo "[INFO] ($READY/$DESIRED) Pods Ready, waiting for pods to come up..."
-    sleep $SLEEP_TIME
-  fi
-done
-if [ "$RETRIES" -gt "$LIMIT" ]; then
-  echo "[ERROR] All Retries Exhausted!"
-  exit 1
-fi
-
-
-RETRIES=0
-while [ "$RETRIES" -le "$LIMIT" ]; do
-  # Check if pods are ready
-  if ! PX_POD=$(kubectl get pods -l name=portworx -n kube-system -o jsonpath='{.items[0].metadata.name}'); then
-    echo "[WARN] Portworx Daemon Pod Status Not Found, will retry in $SLEEP_TIME secs!"
-    sleep $SLEEP_TIME
-    (( RETRIES++ ))
-  else
-    echo '[INFO] Found Portworx Daemon Pod...'
-    break
-  fi
+while [ "$RETRIES" -le "$LIMIT" ] && [ "$READY" -lt "$DESIRED" ]; do
+  ds_status=($(kubectl describe ds portworx -n kube-system | grep "Pods Status" | cut -d ":" -f 2))
+  printf "$HEADER*\t\t\t\tDaemonset Status\t\t\t*\n* portworx\t[ ${ds_status[*]} ]\t*$DIVIDER"
+  kubectl get pods -l name=portworx -n kube-system | awk 'NR>1 { print "* "$1"\t\t\t [ "$3"\t"$2"\t"$5" ]\t*"  }'
+  printf $DIVIDER
 done
 if [ "$RETRIES" -gt "$LIMIT" ]; then
   echo "[ERROR] All Retries Exhausted!"
@@ -68,11 +45,15 @@ fi
 RETRIES=0
 while [ "$RETRIES" -le "$LIMIT" ]; do
   echo "[INFO] Getting Portworx Installation Status..."
+  PX_POD=$(kubectl get pods -l name=portworx -n kube-system -o custom-columns=":metadata.name" | awk 'END{print}')
   if ! STATUS=$(kubectl exec $PX_POD -n kube-system -- /opt/pwx/bin/pxctl status --json | jq -r '.status'); then
     echo "[WARN] Portworx Status Not Found, will retry in $SLEEP_TIME secs!"
     (( RETRIES++ ))
   elif [ "$STATUS" == "STATUS_OK" ]; then
-    echo "[INFO] Portworx Status: $STATUS"
+    ds_status=($(kubectl describe ds portworx -n kube-system | grep "Pods Status" | cut -d ":" -f 2))
+    printf "$HEADER*\t\t\t\tDaemonset Status\t\t\t*\n* portworx\t[ ${ds_status[*]} ]\t*$DIVIDER"
+    kubectl get pods -l name=portworx -n kube-system | awk 'NR>1 { print "* "$1"\t\t\t [ "$3"\t"$2"\t"$5" ]\t*"  }'
+    printf "$DIVIDER*\t\t\tPortworx Status: $STATUS\t\t\t*$DIVIDER"
     echo "[INFO] Successful Installation!!"
     break
   else
