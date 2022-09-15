@@ -18,7 +18,7 @@ while [ "$RETRIES" -le "$LIMIT" ]; do
     ((RETRIES++))
   else
     ds_status=($(kubectl describe ds portworx -n kube-system | grep "Pods Status" | cut -d ":" -f 2))
-    printf "$HEADER*\t\t\t\tDaemonset Status\t\t\t*\n* portworx\t[ ${ds_status[*]} ]\t*$DIVIDER"
+    printf "$HEADER*\t\t\t\tDaemonset Status\t\t\t*\n* portworx\t[ ${ds_status[*]} ]\t*$DIVIDER*\t\t\t\tPods ( $READY/$DESIRED )\t\t\t\t*\n"
     DESIRED="${ds_state[0]}"
     READY="${ds_state[1]}"
     break
@@ -35,7 +35,7 @@ while [ "$RETRIES" -le "$LIMIT" ] && [ "$READY" -lt "$DESIRED" ]; do
     echo "[WARN] Portworx Pods Status Not Found, will retry in $SLEEP_TIME secs!"
     ((RETRIES++))
   else
-    printf "$HEADER*\t\t\t\tDaemonset Status\t\t\t*\n* portworx\t[ ${ds_status[*]} ]\t*$DIVIDER"
+    printf "$HEADER*\t\t\t\tDaemonset Status\t\t\t*\n* portworx\t[ ${ds_status[*]} ]\t*$DIVIDER*\t\t\t\tPods ( $READY/$DESIRED )\t\t\t\t*\n"
     kubectl get pods -l name=portworx -n kube-system | awk 'NR>1 { print "* "$1"\t\t\t [ "$3"\t"$2"\t"$5" ]\t*"  }'
     printf $DIVIDER
     echo "[INFO] All Portworx Pods are not ready, will recheck in $SLEEP_TIME secs!"
@@ -59,7 +59,7 @@ while [ "$RETRIES" -le "$LIMIT" ]; do
     sleep $SLEEP_TIME
   elif [ "$STATUS" == "STATUS_OK" ]; then
     ds_status=($(kubectl describe ds portworx -n kube-system | grep "Pods Status" | cut -d ":" -f 2))
-    printf "$HEADER*\t\t\t\tDaemonset Status\t\t\t*\n* portworx\t[ ${ds_status[*]} ]\t*$DIVIDER"
+    printf "$HEADER*\t\t\t\tDaemonset Status\t\t\t*\n* portworx\t[ ${ds_status[*]} ]\t*$DIVIDER*\t\t\t\tPods ( $READY/$DESIRED )\t\t\t\t*\n"
     kubectl get pods -l name=portworx -n kube-system | awk 'NR>1 { print "* "$1"\t\t\t [ "$3"\t"$2"\t"$5" ]\t*"  }'
     printf "$DIVIDER*\t\t\tPortworx Status: $STATUS\t\t\t*$DIVIDER"
     echo "[INFO] Successful Installation!!"
