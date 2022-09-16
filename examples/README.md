@@ -59,3 +59,7 @@ terraform apply tf.plan
 ```sh
 terraform output
 ```
+- Destroy the Installation
+```sh
+terraform destroy
+```
