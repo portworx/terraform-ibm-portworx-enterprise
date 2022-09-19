@@ -37,7 +37,6 @@ resource_group="your_resource_group_name"
 ibmcloud_api_key="secret_ibm_cloud_key"
 ```
 Create the above file with name `terraform.tfvars`
-
 Check the `examples/variables.tf` to understand what are the variables required
 
 ## Setting up Credentials

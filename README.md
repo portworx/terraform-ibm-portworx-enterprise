@@ -19,6 +19,9 @@ module "portworx-enterprise" {
   tags                      = ["importance:critical"]
 }
 ```
+## Getting Started
+> Please refer to [this](https://github.com/portworx/terraform-ibm-portworx-enterprise/blob/main/examples/README.md) as a quickstart guide to install Portworx Enterprise on an IKS using Cloud Drives.
+
 ## Examples
 - [Installation on IKS Cluster created using Classic Infra](https://github.com/portworx/terraform-ibm-portworx-enterprise/tree/main/examples/iks-classic-infra)
 - [Installation on IKS Cluster created using VPC Gen 2 with Cloud Drives](https://github.com/portworx/terraform-ibm-portworx-enterprise/tree/main/examples/iks-with-attached-drives)

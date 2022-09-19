@@ -42,14 +42,13 @@ variable "region" {
   nullable    = false
 }
 
-//TODO: `px-enterprise-dr` is not valid, have to replace it
 variable "pwx_plan" {
   description = "Portworx plan type "
   type        = string
   default     = "px-enterprise"
   validation {
-    condition     = contains(["px-enterprise", "px-enterprise-dr"], var.pwx_plan)
-    error_message = "The value of `pwx_plan` should be any of the following:\npx-enterprise\npx-enterprise-dr"
+    condition     = contains(["px-enterprise", "px-dr-enterprise"], var.pwx_plan)
+    error_message = "The value of `pwx_plan` should be any of the following:\npx-enterprise\npx-dr-enterprise"
   }
 }
 
@@ -90,7 +89,7 @@ variable "cloud_drives_sizes" {
 variable "storage_classes" {
   type        = list(string)
   description = "Storage Classes for each cloud drive"
-  default     = ["ibmc-vpc-block-10iops-tier", "ibmc-vpc-block-10iops-tier", "ibmc-vpc-block-10iops-tier"]
+  default     = ["ibmc-vpc-block-10iops-tier"]
   validation {
     condition = alltrue([
       for sc in var.storage_classes : contains(["ibmc-vpc-block-10iops-tier", "ibmc-vpc-block-5iops-tier", "ibmc-vpc-block-general-purpose", "ibmc-vpc-block-retain-10iops-tier", "ibmc-vpc-block-retain-5iops-tier", "ibmc-vpc-block-retain-general-purpose"], sc)
