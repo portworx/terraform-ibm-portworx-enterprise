@@ -29,7 +29,7 @@ resource "ibm_resource_instance" "portworx" {
     internal_kvdb             = var.use_external_etcd ? "external" : "internal",
     image_version             = var.portworx_version,
     secret_type               = var.secret_type,
-    csi                       = var.portworx_csi ? "true" : "false",
+    csi                       = var.portworx_csi ? "'true'" : "'false'",
     cloud_drive               = var.use_cloud_drives ? "Yes" : "No",
     max_storage_node_per_zone = var.max_storage_node_per_zone,
     num_cloud_drives          = var.num_cloud_drives,
