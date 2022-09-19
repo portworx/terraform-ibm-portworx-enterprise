@@ -40,7 +40,7 @@ resource "ibm_resource_instance" "portworx" {
     storageClassName2         = (var.num_cloud_drives == 2) ? element(var.storage_classes, 1) : "",
     storageClassName3         = (var.num_cloud_drives == 3) ? element(var.storage_classes, 2) : ""
   }
-  //TODO: fix csi boolean issue
+
   provisioner "local-exec" {
     working_dir = "${path.module}/utils/"
     command     = "/bin/bash portworx_wait_until_ready.sh"
