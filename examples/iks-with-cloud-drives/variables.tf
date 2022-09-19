@@ -92,7 +92,7 @@ variable "storage_classes" {
   default     = ["ibmc-vpc-block-10iops-tier"]
 }
 
-variable "csi" {
+variable "portworx_csi" {
   type        = bool
   description = "Enable CSI, `true` or `false`"
   default     = false

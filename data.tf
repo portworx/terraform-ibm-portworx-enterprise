@@ -32,7 +32,6 @@ locals {
   parameters = {
     apikey                    = var.ibmcloud_api_key
     cluster_name              = var.cluster_name
-    clusters                  = var.cluster_name
     image_version             = var.portworx_version
     secret_type               = var.secret_type
     etcd_endpoint             = var.use_external_etcd ? var.external_etcd_connection_url : null
