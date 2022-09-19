@@ -1,6 +1,6 @@
 module "portworx-enterprise" {
   // IBM Provider Configuration
-  source           = "github.com/portworx/terraform-ibm-portworx-enterprise.git"
+  source           = "github.com/portworx/terraform-ibm-portworx-enterprise.git?ref=PWX-27061"
   region           = var.region
   ibmcloud_api_key = var.ibmcloud_api_key
 
