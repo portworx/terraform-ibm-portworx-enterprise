@@ -45,7 +45,6 @@ Check the `examples/variables.tf` to understand what are the variables required
 ```sh
 export IC_API_KEY="secret_ibm_cloud_key"
 ibmcloud ks cluster config --admin --cluster <cluster_name | cluster_id>
-cd iks-<example_name>
 ```
 
 ## Installation
