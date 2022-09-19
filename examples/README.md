@@ -35,7 +35,6 @@ We shall use `terraform.tfvars` in these examples.
 iks_cluster_name="your_cluster_name"
 resource_group="your_resource_group_name"
 ibmcloud_api_key="secret_ibm_cloud_key"
-use_cloud_drives=true
 ```
 Create the above file with name `terraform.tfvars`
 
@@ -45,7 +44,6 @@ Check the `examples/variables.tf` to understand what are the variables required
 ```sh
 export IC_API_KEY="secret_ibm_cloud_key"
 ibmcloud ks cluster config --admin --cluster <cluster_name | cluster_id>
-cd iks-<example_name>
 ```
 
 ## Installation
