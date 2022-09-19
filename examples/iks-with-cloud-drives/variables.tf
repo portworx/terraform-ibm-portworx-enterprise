@@ -83,13 +83,13 @@ variable "num_cloud_drives" {
 variable "cloud_drives_sizes" {
   type        = list(number)
   description = "Size of Cloud Drive in GB, ex: [50, 60, 70]"
-  default     = [100, 100, 100]
+  default     = [100]
 }
 
 variable "storage_classes" {
   type        = list(string)
   description = "Storage Classes for each cloud drive"
-  default     = ["ibmc-vpc-block-10iops-tier", "ibmc-vpc-block-10iops-tier", "ibmc-vpc-block-10iops-tier"]
+  default     = ["ibmc-vpc-block-10iops-tier"]
 }
 
 variable "csi" {

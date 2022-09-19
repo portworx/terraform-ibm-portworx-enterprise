@@ -83,13 +83,13 @@ variable "num_cloud_drives" {
 variable "cloud_drives_sizes" {
   type        = list(number)
   description = "Size of Cloud Drive in GB, ex: [50, 60, 70], the number of elements should be same as the value of `num_cloud_drives`"
-  default     = [100]
+  default     = [ 100 ]
 }
 
 variable "storage_classes" {
   type        = list(string)
-  description = "Storage Classes for each cloud drive"
-  default     = ["ibmc-vpc-block-10iops-tier"]
+  description = "Storage Classes for each cloud drive, the number of elements should be same as the value of `num_cloud_drives`"
+  default     = [ "ibmc-vpc-block-10iops-tier" ]
   validation {
     condition = alltrue([
       for sc in var.storage_classes : contains(["ibmc-vpc-block-10iops-tier", "ibmc-vpc-block-5iops-tier", "ibmc-vpc-block-general-purpose", "ibmc-vpc-block-retain-10iops-tier", "ibmc-vpc-block-retain-5iops-tier", "ibmc-vpc-block-retain-general-purpose"], sc)
