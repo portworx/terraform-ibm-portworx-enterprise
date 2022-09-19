@@ -29,4 +29,24 @@ data "ibm_container_cluster_worker" "worker_classic" {
 
 locals {
   cluster_ref = var.classic_infra ? data.ibm_container_cluster.cluster_classic[0] : data.ibm_container_vpc_cluster.cluster[0]
+  parameters = {
+    apikey                    = var.ibmcloud_api_key
+    cluster_name              = var.cluster_name
+    clusters                  = var.cluster_name
+    image_version             = var.portworx_version
+    secret_type               = var.secret_type
+    etcd_endpoint             = var.use_external_etcd ? var.external_etcd_connection_url : null
+    etcd_secret               = var.use_external_etcd ? var.etcd_secret_name : null
+    internal_kvdb             = var.use_external_etcd ? "external" : "internal"
+    csi                       = var.portworx_csi ? "True" : "False"
+    cloud_drive               = var.use_cloud_drives ? "Yes" : "No"
+    max_storage_node_per_zone = var.max_storage_node_per_zone
+    num_cloud_drives          = var.num_cloud_drives
+    size                      = element(var.cloud_drives_sizes, 0)
+    size2                     = (var.num_cloud_drives == 2) ? element(var.cloud_drives_sizes, 1) : 0
+    size3                     = (var.num_cloud_drives == 3) ? element(var.cloud_drives_sizes, 2) : 0
+    storageClassName          = element(var.storage_classes, 0)
+    storageClassName2         = (var.num_cloud_drives == 2) ? element(var.storage_classes, 1) : ""
+    storageClassName3         = (var.num_cloud_drives == 3) ? element(var.storage_classes, 2) : ""
+  }
 }

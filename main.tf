@@ -41,7 +41,7 @@ resource "ibm_resource_instance" "portworx" {
   #   storageClassName3         = (var.num_cloud_drives == 3) ? element(var.storage_classes, 2) : ""
   # }
 
-  parameters = templatefile("${path.module}/params.tftpl", { ibmcloud_api_key = var.ibmcloud_api_key })
+  parameters = templatefile("${path.module}/params.tftpl", local.parameters)
   provisioner "local-exec" {
     working_dir = "${path.module}/utils/"
     command     = "/bin/bash portworx_wait_until_ready.sh"
