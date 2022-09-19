@@ -35,11 +35,12 @@ while [ "$RETRIES" -le "$LIMIT" ] && [ "$READY" -lt "$DESIRED" ]; do
     echo "[WARN] Portworx Pods Status Not Found, will retry in $SLEEP_TIME secs!"
     ((RETRIES++))
   else
+    READY=$(kubectl get -n kube-system ds portworx -o jsonpath='{.status.numberReady}')
     printf "$HEADER*\t\t\t\tDaemonset Status\t\t\t*\n* portworx\t[ ${ds_status[*]} ]\t*$DIVIDER*\t\t\t\tPods ( $READY/$DESIRED )\t\t\t\t*\n"
     kubectl get pods -l name=portworx -n kube-system | awk 'NR>1 { print "* "$1"\t\t\t [ "$3"\t"$2"\t"$5" ]\t*"  }'
     printf $DIVIDER
     echo "[INFO] All Portworx Pods are not ready, will recheck in $SLEEP_TIME secs!"
-    READY=$(kubectl get -n kube-system ds portworx -o jsonpath='{.status.numberReady}')
+    
   fi
   sleep $SLEEP_TIME
 done
