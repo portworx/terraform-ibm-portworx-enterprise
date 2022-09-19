@@ -38,7 +38,6 @@ ibmcloud_api_key="secret_ibm_cloud_key"
 use_cloud_drives=true
 ```
 Create the above file with name `terraform.tfvars`
-
 Check the `examples/variables.tf` to understand what are the variables required
 
 ## Setting up Credentials
