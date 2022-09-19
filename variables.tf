@@ -42,6 +42,7 @@ variable "region" {
   nullable    = false
 }
 
+//TODO: `px-enterprise-dr` is not valid, have to replace it
 variable "pwx_plan" {
   description = "Portworx plan type "
   type        = string
