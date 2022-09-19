@@ -75,32 +75,7 @@ variable "secret_type" {
   default     = "k8s"
 }
 
-
-variable "max_storage_node_per_zone" {
-  type        = number
-  description = "Maximum number of strorage nodes per zone"
-  default     = 1
-}
-
-variable "num_cloud_drives" {
-  type        = number
-  description = "Number of cloud drives per zone"
-  default     = 1
-}
-
-variable "cloud_drives_sizes" {
-  type        = list(number)
-  description = "Size of Cloud Drive in GB, ex: [50, 60, 70]"
-  default     = [100, 100, 100]
-}
-
-variable "storage_classes" {
-  type        = list(string)
-  description = "Storage Classes for each cloud drive"
-  default     = ["ibmc-vpc-block-10iops-tier", "ibmc-vpc-block-10iops-tier", "ibmc-vpc-block-10iops-tier"]
-}
-
-variable "csi" {
+variable "portworx_csi" {
   type        = bool
   description = "Enable CSI, `true` or `false`"
   default     = false
