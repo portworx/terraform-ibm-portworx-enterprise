@@ -33,11 +33,11 @@ resource "ibm_resource_instance" "portworx" {
     cloud_drive               = var.use_cloud_drives ? "Yes" : "No"
     max_storage_node_per_zone = var.cloud_drive_options.max_storage_node_per_zone
     num_cloud_drives          = var.cloud_drive_options.num_cloud_drives
-    size                      = element(var.cloud_drive_options.cloud_drives_sizes, 0)
-    size2                     = (var.cloud_drive_options.num_cloud_drives == 2) ? element(var.cloud_drive_options.cloud_drives_sizes, 1) : 0
+    size                      = (var.cloud_drive_options.num_cloud_drives >= 1) ? element(var.cloud_drive_options.cloud_drives_sizes, 0) : 0
+    size2                     = (var.cloud_drive_options.num_cloud_drives >= 2) ? element(var.cloud_drive_options.cloud_drives_sizes, 1) : 0
     size3                     = (var.cloud_drive_options.num_cloud_drives == 3) ? element(var.cloud_drive_options.cloud_drives_sizes, 2) : 0
-    storageClassName          = element(var.cloud_drive_options.storage_classes, 0)
-    storageClassName2         = (var.cloud_drive_options.num_cloud_drives == 2) ? element(var.cloud_drive_options.storage_classes, 1) : ""
+    storageClassName          = (var.cloud_drive_options.num_cloud_drives >= 1) ? element(var.cloud_drive_options.storage_classes, 0) : ""
+    storageClassName2         = (var.cloud_drive_options.num_cloud_drives >= 2) ? element(var.cloud_drive_options.storage_classes, 1) : ""
     storageClassName3         = (var.cloud_drive_options.num_cloud_drives == 3) ? element(var.cloud_drive_options.storage_classes, 2) : ""
   }
 
