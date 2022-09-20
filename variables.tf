@@ -118,12 +118,12 @@ variable "cloud_drive_options" {
     cloud_drives_sizes        = list(number)
     storage_classes           = list(string)
   })
-  default = object({
+  default = {
     max_storage_node_per_zone = 1
     num_cloud_drives          = 1
     cloud_drives_sizes        = [100]
     storage_classes           = ["ibmc-vpc-block-10iops-tier"]
-  })
+  }
   validation {
     condition     = var.cloud_drive_options.num_cloud_drives >= 1 && var.cloud_drive_options.num_cloud_drives <= 3
     error_message = "The value of `num_cloud_drives` should be an integer, min = 1 and max = 3"
