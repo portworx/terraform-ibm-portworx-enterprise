@@ -21,24 +21,24 @@ resource "ibm_resource_instance" "portworx" {
   ], var.tags)
 
   parameters = {
-    apikey                    = var.ibmcloud_api_key,
-    cluster_name              = var.cluster_name,
-    clusters                  = var.cluster_name,
-    etcd_endpoint             = var.use_external_etcd ? var.external_etcd_connection_url : null,
-    etcd_secret               = var.use_external_etcd ? var.etcd_secret_name : null,
-    internal_kvdb             = var.use_external_etcd ? "external" : "internal",
-    image_version             = var.portworx_version,
-    secret_type               = var.secret_type,
-    csi                       = var.portworx_csi ? "True" : "False",
-    cloud_drive               = var.use_cloud_drives ? "Yes" : "No",
-    max_storage_node_per_zone = var.max_storage_node_per_zone,
-    num_cloud_drives          = var.num_cloud_drives,
-    size                      = element(var.cloud_drives_sizes, 0),
-    size2                     = (var.num_cloud_drives == 2) ? element(var.cloud_drives_sizes, 1) : 0,
-    size3                     = (var.num_cloud_drives == 3) ? element(var.cloud_drives_sizes, 2) : 0,
-    storageClassName          = element(var.storage_classes, 0),
-    storageClassName2         = (var.num_cloud_drives == 2) ? element(var.storage_classes, 1) : "",
-    storageClassName3         = (var.num_cloud_drives == 3) ? element(var.storage_classes, 2) : ""
+    apikey                    = var.ibmcloud_api_key
+    cluster_name              = var.cluster_name
+    clusters                  = var.cluster_name
+    etcd_endpoint             = var.use_external_etcd ? var.external_etcd_connection_url : null
+    etcd_secret               = var.use_external_etcd ? var.etcd_secret_name : null
+    internal_kvdb             = var.use_external_etcd ? "external" : "internal"
+    image_version             = var.portworx_version
+    secret_type               = var.secret_type
+    csi                       = var.portworx_csi ? "True" : "False"
+    cloud_drive               = var.use_cloud_drives ? "Yes" : "No"
+    max_storage_node_per_zone = var.cloud_drive_options.max_storage_node_per_zone
+    num_cloud_drives          = var.cloud_drive_options.num_cloud_drives
+    size                      = (var.cloud_drive_options.num_cloud_drives >= 1) ? element(var.cloud_drive_options.cloud_drives_sizes, 0) : 0
+    size2                     = (var.cloud_drive_options.num_cloud_drives >= 2) ? element(var.cloud_drive_options.cloud_drives_sizes, 1) : 0
+    size3                     = (var.cloud_drive_options.num_cloud_drives == 3) ? element(var.cloud_drive_options.cloud_drives_sizes, 2) : 0
+    storageClassName          = (var.cloud_drive_options.num_cloud_drives >= 1) ? element(var.cloud_drive_options.storage_classes, 0) : ""
+    storageClassName2         = (var.cloud_drive_options.num_cloud_drives >= 2) ? element(var.cloud_drive_options.storage_classes, 1) : ""
+    storageClassName3         = (var.cloud_drive_options.num_cloud_drives == 3) ? element(var.cloud_drive_options.storage_classes, 2) : ""
   }
 
   provisioner "local-exec" {

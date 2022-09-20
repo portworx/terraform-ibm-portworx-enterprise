@@ -1,6 +1,6 @@
 module "portworx-enterprise" {
   // IBM Provider Configuration
-  source           = "github.com/portworx/terraform-ibm-portworx-enterprise.git"
+  source           = "../../"
   region           = var.region
   ibmcloud_api_key = var.ibmcloud_api_key
 
@@ -21,11 +21,13 @@ module "portworx-enterprise" {
   portworx_csi          = var.portworx_csi
   portworx_service_name = var.portworx_service_name
   secret_type           = var.secret_type
-  
+
   // Cloud Drives Configuration
-  use_cloud_drives          = var.use_cloud_drives
-  max_storage_node_per_zone = var.max_storage_node_per_zone
-  num_cloud_drives          = var.num_cloud_drives
-  cloud_drives_sizes        = var.cloud_drives_sizes
-  storage_classes           = var.storage_classes
+  use_cloud_drives    = var.use_cloud_drives
+  cloud_drive_options = {
+    max_storage_node_per_zone = var.max_storage_node_per_zone
+    num_cloud_drives = var.num_cloud_drives
+    cloud_drives_sizes = var.cloud_drives_sizes
+    storage_classes = var.storage_classes
+  }
 }

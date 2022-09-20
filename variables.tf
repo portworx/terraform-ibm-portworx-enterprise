@@ -64,40 +64,6 @@ variable "use_cloud_drives" {
   default     = true
 }
 
-variable "max_storage_node_per_zone" {
-  type        = number
-  description = "Maximum number of strorage nodes per zone, you can set this to the maximum worker nodes in your cluster"
-  default     = 1
-}
-
-variable "num_cloud_drives" {
-  type        = number
-  description = "Number of cloud drives per zone, Max: 3"
-  default     = 1
-  validation {
-    condition     = var.num_cloud_drives >= 1 && var.num_cloud_drives <= 3
-    error_message = "The value of `num_cloud_drives` should be an integer, min = 1 and max = 3"
-  }
-}
-
-variable "cloud_drives_sizes" {
-  type        = list(number)
-  description = "Size of Cloud Drive in GB, ex: [50, 60, 70], the number of elements should be same as the value of `num_cloud_drives`"
-  default     = [ 100 ]
-}
-
-variable "storage_classes" {
-  type        = list(string)
-  description = "Storage Classes for each cloud drive, the number of elements should be same as the value of `num_cloud_drives`"
-  default     = [ "ibmc-vpc-block-10iops-tier" ]
-  validation {
-    condition = alltrue([
-      for sc in var.storage_classes : contains(["ibmc-vpc-block-10iops-tier", "ibmc-vpc-block-5iops-tier", "ibmc-vpc-block-general-purpose", "ibmc-vpc-block-retain-10iops-tier", "ibmc-vpc-block-retain-5iops-tier", "ibmc-vpc-block-retain-general-purpose"], sc)
-    ])
-    error_message = "The value of `storage_classes` should be a list of strings\nAvailable Options: ibmc-vpc-block-10iops-tier\nibmc-vpc-block-5iops-tier\nibmc-vpc-block-general-purpose\nibmc-vpc-block-retain-10iops-tier\nibmc-vpc-block-retain-5iops-tier\nibmc-vpc-block-retain-general-purpose"
-  }
-}
-
 variable "portworx_csi" {
   type        = bool
   description = "Enable Portworx CSI, `true` or `false`"
@@ -134,4 +100,42 @@ variable "tags" {
   type        = list(string)
   description = "Optional Tags to be add, if required."
   default     = []
+}
+
+
+variable "cloud_drive_options" {
+  description = <<-_EOT
+  cloud_drive_options = {
+    max_storage_node_per_zone : "Maximum number of strorage nodes per zone, you can set this to the maximum worker nodes in your cluster"
+    num_cloud_drives : "Number of cloud drives per zone, Max: 3"
+    cloud_drives_sizes : "Size of Cloud Drive in GB, ex: [50, 60, 70], the number of elements should be same as the value of `num_cloud_drives`"
+    storage_classes : "Storage Classes for each cloud drive, ex: [ "ibmc-vpc-block-10iops-tier", "ibmc-vpc-block-5iops-tier", "ibmc-vpc-block-general-purpose"], the number of elements should be same as the value of `num_cloud_drives`"
+  }
+  _EOT
+  type = object({
+    max_storage_node_per_zone = number
+    num_cloud_drives          = number
+    cloud_drives_sizes        = list(number)
+    storage_classes           = list(string)
+  })
+  default = {
+    max_storage_node_per_zone = 1
+    num_cloud_drives          = 1
+    cloud_drives_sizes        = [100]
+    storage_classes           = ["ibmc-vpc-block-10iops-tier"]
+  }
+  validation {
+    condition     = var.cloud_drive_options.num_cloud_drives >= 1 && var.cloud_drive_options.num_cloud_drives <= 3
+    error_message = "The value of `num_cloud_drives` should be an integer, min = 1 and max = 3"
+  }
+  validation {
+    condition     = length(var.cloud_drive_options.cloud_drives_sizes) == length(var.cloud_drive_options.storage_classes) && var.cloud_drive_options.num_cloud_drives == length(var.cloud_drive_options.storage_classes)
+    error_message = "The length of `cloud_drives_sizes` list should be equal to the length of `storage_classes` list, and the number of elements in each should be equal to `num_cloud_drives`"
+  }
+  validation {
+    condition = alltrue([
+      for sc in var.cloud_drive_options.storage_classes : contains(["ibmc-vpc-block-10iops-tier", "ibmc-vpc-block-5iops-tier", "ibmc-vpc-block-general-purpose", "ibmc-vpc-block-retain-10iops-tier", "ibmc-vpc-block-retain-5iops-tier", "ibmc-vpc-block-retain-general-purpose"], sc)
+    ])
+    error_message = "The value of `storage_classes` should be a list of strings\nAvailable Options: ibmc-vpc-block-10iops-tier\nibmc-vpc-block-5iops-tier\nibmc-vpc-block-general-purpose\nibmc-vpc-block-retain-10iops-tier\nibmc-vpc-block-retain-5iops-tier\nibmc-vpc-block-retain-general-purpose"
+  }
 }
