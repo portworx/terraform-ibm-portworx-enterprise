@@ -25,9 +25,9 @@ module "portworx-enterprise" {
   // Cloud Drives Configuration
   use_cloud_drives    = var.use_cloud_drives
   cloud_drive_options = {
-    maxcloud_drives_sizes = var.max_storage_node_per_zone
+    max_storage_node_per_zone = var.max_storage_node_per_zone
     num_cloud_drives = var.num_cloud_drives
     cloud_drives_sizes = var.cloud_drives_sizes
-    storagestorage_classes = var.storage_classes
+    storage_classes = var.storage_classes
   }
 }
