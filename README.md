@@ -64,13 +64,11 @@ module "portworx-enterprise" {
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_classic_infra"></a> [classic\_infra](#input\_classic\_infra) | IKS is on classic infra, `true` or `false` | `bool` | `false` | no |
-| <a name="input_cloud_drives_sizes"></a> [cloud\_drives\_sizes](#input\_cloud\_drives\_sizes) | Size of Cloud Drive in GB, ex: [50, 60, 70], the number of elements should be same as the value of `num_cloud_drives` | `list(number)` | <pre>[ 100 ]</pre> | no |
+| <a name="input_cloud_drive_options"></a> [cloud\_drive\_options](#input\_cloud\_drive\_options) | cloud\_drive\_options = {<br>  max\_storage\_node\_per\_zone : "Maximum number of strorage nodes per zone, you can set this to the maximum worker nodes in your cluster"<br>  num\_cloud\_drives : "Number of cloud drives per zone, Max: 3"<br>  cloud\_drives\_sizes : "Size of Cloud Drive in GB, ex: [50, 60, 70], the number of elements should be same as the value of `num_cloud_drives`"<br>  storage\_classes : "Storage Classes for each cloud drive, ex: [ "ibmc-vpc-block-10iops-tier", "ibmc-vpc-block-5iops-tier", "ibmc-vpc-block-general-purpose"], the number of elements should be same as the value of `num_cloud_drives`"<br>} | <pre>object({<br>    max_storage_node_per_zone = number<br>    num_cloud_drives          = number<br>    cloud_drives_sizes        = list(number)<br>    storage_classes           = list(string)<br>  })</pre> | <pre>{<br>  "cloud_drives_sizes": [<br>    100<br>  ],<br>  "max_storage_node_per_zone": 1,<br>  "num_cloud_drives": 1,<br>  "storage_classes": [<br>    "ibmc-vpc-block-10iops-tier"<br>  ]<br>}</pre> | no |
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | Name of existing IKS cluster | `string` | n/a | yes |
 | <a name="input_etcd_secret_name"></a> [etcd\_secret\_name](#input\_etcd\_secret\_name) | The name of etcd secret certificate, required only when external etcd is used | `string` | `null` | no |
 | <a name="input_external_etcd_connection_url"></a> [external\_etcd\_connection\_url](#input\_external\_etcd\_connection\_url) | The connection string with port number for the etcd, required only when external etcd is used | `string` | `null` | no |
 | <a name="input_ibmcloud_api_key"></a> [ibmcloud\_api\_key](#input\_ibmcloud\_api\_key) | Get the ibmcloud api key from https://cloud.ibm.com/iam/apikeys | `string` | n/a | yes |
-| <a name="input_max_storage_node_per_zone"></a> [max\_storage\_node\_per\_zone](#input\_max\_storage\_node\_per\_zone) | Maximum number of strorage nodes per zone, you can set this to the maximum worker nodes in your cluster | `number` | `1` | no |
-| <a name="input_num_cloud_drives"></a> [num\_cloud\_drives](#input\_num\_cloud\_drives) | Number of cloud drives per zone, Max: 3 | `number` | `1` | no |
 | <a name="input_portworx_csi"></a> [portworx\_csi](#input\_portworx\_csi) | Enable Portworx CSI, `true` or `false` | `bool` | `false` | no |
 | <a name="input_portworx_service_name"></a> [portworx\_service\_name](#input\_portworx\_service\_name) | Name to be provided to the portworx cluster to be deployed | `string` | `"portworx-enterprise"` | no |
 | <a name="input_portworx_version"></a> [portworx\_version](#input\_portworx\_version) | Image Version of Portworx Enterprise | `string` | `"2.11.0"` | no |
@@ -78,11 +76,11 @@ module "portworx-enterprise" {
 | <a name="input_region"></a> [region](#input\_region) | The region Portworx will be installed in: us-south, us-east, eu-gb, eu-de, jp-tok, au-syd, etc. | `string` | `"us-east"` | no |
 | <a name="input_resource_group"></a> [resource\_group](#input\_resource\_group) | Resource group of existing IKS Cluster | `string` | n/a | yes |
 | <a name="input_secret_type"></a> [secret\_type](#input\_secret\_type) | secret type | `string` | `"k8s"` | no |
-| <a name="input_storage_classes"></a> [storage\_classes](#input\_storage\_classes) | Storage Classes for each cloud drive, the number of elements should be same as the value of `num_cloud_drives` | `list(string)` | <pre>[ "ibmc-vpc-block-10iops-tier" ]</pre> | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | Optional Tags to be add, if required. | `list(string)` | `[]` | no |
 | <a name="input_upgrade_portworx"></a> [upgrade\_portworx](#input\_upgrade\_portworx) | Upgrade Portworx Version to the respective `portworx_version`, `true` or `false` | `bool` | `false` | no |
 | <a name="input_use_cloud_drives"></a> [use\_cloud\_drives](#input\_use\_cloud\_drives) | Use Cloud Drives, `true` or `false` | `bool` | `true` | no |
 | <a name="input_use_external_etcd"></a> [use\_external\_etcd](#input\_use\_external\_etcd) | Do you want to create an external\_etcd? `true` or `false` | `bool` | `false` | no |
+
 
 ## Outputs
 
