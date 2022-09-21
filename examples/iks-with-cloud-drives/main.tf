@@ -10,9 +10,11 @@ module "portworx-enterprise" {
   classic_infra  = var.classic_infra
 
   // External ETCD Configuration
-  use_external_etcd            = var.use_external_etcd
-  etcd_secret_name             = var.etcd_secret_name
-  external_etcd_connection_url = var.external_etcd_connection_url
+  etcd_options = {
+    use_external_etcd            = var.use_external_etcd
+    etcd_secret_name             = var.etcd_secret_name
+    external_etcd_connection_url = var.external_etcd_connection_url
+  }
 
   // Portworx Enterprise Configuration
   pwx_plan              = var.pwx_plan
@@ -23,11 +25,11 @@ module "portworx-enterprise" {
   secret_type           = var.secret_type
 
   // Cloud Drives Configuration
-  use_cloud_drives    = var.use_cloud_drives
+  use_cloud_drives = var.use_cloud_drives
   cloud_drive_options = {
     max_storage_node_per_zone = var.max_storage_node_per_zone
-    num_cloud_drives = var.num_cloud_drives
-    cloud_drives_sizes = var.cloud_drives_sizes
-    storage_classes = var.storage_classes
+    num_cloud_drives          = var.num_cloud_drives
+    cloud_drives_sizes        = var.cloud_drives_sizes
+    storage_classes           = var.storage_classes
   }
 }
