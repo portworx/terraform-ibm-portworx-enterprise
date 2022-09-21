@@ -5,7 +5,7 @@ IBM Cloud provides an option to provision Portworx Enterprise on IKS cluster thr
 
 Include the below module definition in a `.tf` file to deploy Portworx Enterprise with the default values.
 
-> Please take a look at the defaults value in the **Input Variables** section to understand the default behavior of this module.
+> Please take a look at the default values in the **Input Variables** section to understand the default behavior of this module.
 
 ```terraform
 module "portworx-enterprise" {
