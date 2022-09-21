@@ -24,9 +24,9 @@ resource "ibm_resource_instance" "portworx" {
     apikey                    = var.ibmcloud_api_key
     cluster_name              = var.cluster_name
     clusters                  = var.cluster_name
-    etcd_endpoint             = var.use_external_etcd ? var.external_etcd_connection_url : null
-    etcd_secret               = var.use_external_etcd ? var.etcd_secret_name : null
-    internal_kvdb             = var.use_external_etcd ? "external" : "internal"
+    etcd_endpoint             = var.etcd_options.use_external_etcd ? var.etcd_options.external_etcd_connection_url : null
+    etcd_secret               = var.etcd_options.use_external_etcd ? var.etcd_options.etcd_secret_name : null
+    internal_kvdb             = var.etcd_options.use_external_etcd ? "external" : "internal"
     image_version             = var.portworx_version
     secret_type               = var.secret_type
     csi                       = var.portworx_csi ? "True" : "False"
