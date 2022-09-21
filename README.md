@@ -81,7 +81,7 @@ Below **resources** and **data sources** are created to manage the resources of 
 | [ibm_container_vpc_cluster_worker.worker](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/data-sources/container_vpc_cluster_worker) | data source |
 | [ibm_resource_group.group](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/data-sources/resource_group) | data source |
 
-## Inputs Variables
+## Input Variables
 
 Below list of input variables can be provided to the Terraform module. There are some default values already set for this module which can be overridden otherwise. Please read through the description and default values before handling advanced scenarios of using this module.
 
