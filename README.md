@@ -1,50 +1,70 @@
 # IBM Cloud Portworx Enterprise Module
-Terraform Module which installs Portworx Enterprise on an existing IKS Cluster
+IBM Cloud provides a way to provision Portworx Enterprise on IKS Cluster through IBM Catalog. This repo hosts the terraform module which can be used in conjuction with any existing terraform scripts to provision Portworx Enterprise on IKS.
 
 ## Usage
+
+You can include the below module defination in a `.tf` file to deploy Portworx Enterprise with the default values.
+
+> Please take a look at the defaults value in the **Inputs** Section below
+
 ```terraform
 module "portworx-enterprise" {
   source                    = "github.com/portworx/terraform-ibm-portworx-enterprise.git"
   region                    = "us-east"
   cluster_name              = "my-iks-cluster"
   resource_group            = "my-resource-group"
-  use_cloud_drives          = true
-  classic_infra             = false
-  portworx_version          = "2.11.0"
-  upgrade_portworx          = false
-  max_storage_node_per_zone = 1
-  num_cloud_drives          = 1
-  cloud_drives_sizes        = [100]
-  storage_classes           = "ibmc-vpc-block-10iops-tier"
-  tags                      = ["importance:critical"]
 }
 ```
+## Features
+
+- Declarative Installation/Uninstallation
+- Seamless Upgrades
+- Support for Cloud Drives & Raw Mounted Volumes
+- Easy Integration with existing Terraform Scripts
+- Built-in Preflight Checks
+
 ## Getting Started
-> Please refer to [this](https://github.com/portworx/terraform-ibm-portworx-enterprise/blob/main/examples/README.md) as a quickstart guide to install Portworx Enterprise on an IKS using Cloud Drives.
+
+> Please refer to [this Getting Started Guide](https://github.com/portworx/terraform-ibm-portworx-enterprise/blob/main/examples/README.md) as a quickstart to install Portworx Enterprise on an IKS using Cloud Drives.
+> This guide is intentetd to walk you through the steps needed to set up an environment to be able to perform the terraform deployment on IBM Cloud.
 
 ## Examples
+
+We have compiled a directory full of helpful examples which can be a good starting points to understand and demonstrate the features and capabilities of this module.
+
 - [Installation on IKS Cluster created using Classic Infra](https://github.com/portworx/terraform-ibm-portworx-enterprise/tree/main/examples/iks-classic-infra)
 - [Installation on IKS Cluster created using VPC Gen 2 with Cloud Drives](https://github.com/portworx/terraform-ibm-portworx-enterprise/tree/main/examples/iks-with-attached-drives)
 - [Installation on IKS Cluster created using VPC Gen 2 with Block Volumes already attached to worker nodes](https://github.com/portworx/terraform-ibm-portworx-enterprise/tree/main/examples/iks-with-cloud-drives)
 
 ## Requirements
+
+The following are requirements needed to be installed on the host machine where the terraform commands will be issued.
+We are using a couple of bash scripts, for validation and checks, hence we will need libraries like `wget`, `curl` and `jq`.
+
+Refer to this table below for more details.
+
 | Name  | Version |
 | ------------- | ------------- |
-| terraform  | >= 0.13  |
-| kubectl  | >= 1.22.0  |
-| jq  | >= 1.6  |
-| curl  | >= 7.79.1  |
-| wget  | >= 1.21.3  |
-| tar  | >= 3.5.1  |
-| ibmcloud  | >= 2.10.0  |
+| terraform  | 0.13 and above |
+| kubectl  | 1.22.0 and above |
+| jq  | 1.6 and above |
+| curl  | 7.79.1 and above |
+| wget  | 1.21.3 and above |
+| tar  | 3.5.1 and above |
+| ibmcloud  | 2.10.0 and above |
 
 ## Providers
+
+The following are the providers which are used by our modules, inorder to manage resources on IBM Cloud
+
 | Name  | Version |
 | ------------- | ------------- |
-| ibm-cloud/ibm  | >= v1.45.0  |
-| hashicorp/random  | >= 3.4.3  |
-| hashicorp/null  | >= 3.1.1  |
+| ibm-cloud/ibm  | v1.45.0 and above |
+| hashicorp/random  | 3.4.3 and above |
+| hashicorp/null  | 3.1.1 and above |
 ## Resources
+
+These are the **resources**/**data sources** that are created to manage the resources that this module manages.
 
 | Name | Type |
 |------|------|
@@ -60,6 +80,8 @@ module "portworx-enterprise" {
 | [ibm_resource_group.group](https://registry.terraform.io/providers/IBM-Cloud/ibm/latest/docs/data-sources/resource_group) | data source |
 
 ## Inputs
+
+This is the list of input variables that can be provided to the module. There are some default values already set for this modules which can be overridden otherwise. Please read through the description and default values before handling advance scenarios using this module.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
@@ -81,8 +103,9 @@ module "portworx-enterprise" {
 | <a name="input_use_cloud_drives"></a> [use\_cloud\_drives](#input\_use\_cloud\_drives) | Use Cloud Drives, `true` or `false` | `bool` | `true` | no |
 | <a name="input_use_external_etcd"></a> [use\_external\_etcd](#input\_use\_external\_etcd) | Do you want to create an external\_etcd? `true` or `false` | `bool` | `false` | no |
 
-
 ## Outputs
+
+This is the list of output variables that can be read or refered post a succesfull `terraform apply`. 
 
 | Name | Description |
 |------|-------------|
@@ -92,7 +115,5 @@ module "portworx-enterprise" {
 | <a name="output_portworx_enterprise_service_name"></a> [portworx\_enterprise\_service\_name](#output\_portworx\_enterprise\_service\_name) | The name of the PX-Enterprise Resource Instance |
 | <a name="output_portworx_version_installed"></a> [portworx\_version\_installed](#output\_portworx\_version\_installed) | The version of PX-Enterprise Deployed on the Cluster |
 <!-- END_TF_DOCS -->
-## Authors
-
 ## License
 Apache License 2.0 - Copyright 2022 Pure Storage, Inc.
