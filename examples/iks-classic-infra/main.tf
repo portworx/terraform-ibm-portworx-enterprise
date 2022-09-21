@@ -8,9 +8,11 @@ module "portworx-enterprise" {
   resource_group = var.resource_group
   classic_infra  = var.classic_infra
   // External ETCD Configuration
-  use_external_etcd            = var.use_external_etcd
-  etcd_secret_name             = var.etcd_secret_name
-  external_etcd_connection_url = var.external_etcd_connection_url
+  etcd_options = {
+    use_external_etcd            = var.use_external_etcd
+    etcd_secret_name             = var.etcd_secret_name
+    external_etcd_connection_url = var.external_etcd_connection_url
+  }
   // Portworx Enterprise Configuration
   pwx_plan              = var.pwx_plan
   portworx_version      = var.portworx_version

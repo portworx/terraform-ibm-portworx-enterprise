@@ -17,23 +17,31 @@ variable "resource_group" {
   nullable    = false
 }
 
-variable "use_external_etcd" {
-  type        = bool
-  default     = false
-  description = "Do you want to create an external_etcd? `true` or `false`"
+
+variable "etcd_options" {
+  description = <<-_EOT
+  etcd_options = {
+    use_external_etcd : "Do you want to create an external_etcd? `true` or `false`"
+    etcd_secret_name : "The name of etcd secret certificate, required only when external etcd is used"
+    external_etcd_connection_url : "The connection string with port number for the etcd, required only when external etcd is used"
+  }
+  _EOT
+  type = object({
+    use_external_etcd            = bool
+    etcd_secret_name             = string
+    external_etcd_connection_url = string
+  })
+  default = {
+    use_external_etcd            = false
+    etcd_secret_name             = null
+    external_etcd_connection_url = null
+  }
+  validation {
+    condition     = (var.etcd_options.use_external_etcd && (var.etcd_options.external_etcd_connection_url != null) && (var.etcd_options.etcd_secret_name != null)) || (! var.etcd_options.use_external_etcd && (var.etcd_options.external_etcd_connection_url == null) && (var.etcd_options.etcd_secret_name == null))
+    error_message = "The value of `etcd_secret_name` and `etcd_secret_name` should be set when `use_external_etcd` is set to `true`"
+  }
 }
 
-variable "etcd_secret_name" {
-  type        = string
-  description = "The name of etcd secret certificate, required only when external etcd is used"
-  default     = null
-}
-
-variable "external_etcd_connection_url" {
-  type        = string
-  description = "The connection string with port number for the etcd, required only when external etcd is used"
-  default     = null
-}
 
 variable "region" {
   description = "The region Portworx will be installed in: us-south, us-east, eu-gb, eu-de, jp-tok, au-syd, etc."
