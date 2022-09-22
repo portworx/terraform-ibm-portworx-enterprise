@@ -88,6 +88,10 @@ variable "portworx_version" {
   type        = string
   default     = "2.11.0"
   description = "Image Version of Portworx Enterprise"
+  validation {
+    condition = (tonumber(split(".", var.portworx_version)[0]) > 2) || (tonumber(split(".", var.portworx_version)[0]) == 2 && tonumber(split(".", var.portworx_version)[1]) >= 11)
+    error_message = "Cloud Drives are only supported for `portworx_version: 2.11.0 and above`"
+  }
 }
 
 variable "upgrade_portworx" {
