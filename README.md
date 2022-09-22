@@ -21,7 +21,7 @@ This terraform module provides the following features for seamless adoption:
 
 - Declarative Installation/Uninstallation
 - Seamless Upgrades
-- Support for Cloud Drives and Raw Mounted Volumes
+- Support for Cloud Drives
 - Easy Integration with existing Terraform Scripts
 - Built-in Preflight Checks
 
@@ -33,10 +33,7 @@ This terraform module provides the following features for seamless adoption:
 ## Examples
 
 The below hyperlinks guide you to understand and demonstrate the features and capabilities of this Terraform module:
-
-- [Installation on IKS Cluster created using Classic Infra](https://github.com/portworx/terraform-ibm-portworx-enterprise/tree/main/examples/iks-classic-infra)
-- [Installation on IKS Cluster created using VPC Gen 2 with Cloud Drives](https://github.com/portworx/terraform-ibm-portworx-enterprise/tree/main/examples/iks-with-attached-drives)
-- [Installation on IKS Cluster created using VPC Gen 2 with Block Volumes already attached to worker nodes](https://github.com/portworx/terraform-ibm-portworx-enterprise/tree/main/examples/iks-with-cloud-drives)
+- [Installation on IKS Cluster created using VPC Gen 2 with Cloud Drives](https://github.com/portworx/terraform-ibm-portworx-enterprise/tree/main/examples/iks-with-cloud-drives)
 
 ## Requirements
 
