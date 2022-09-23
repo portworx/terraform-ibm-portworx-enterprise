@@ -86,5 +86,5 @@ variable "portworx_csi" {
 variable "portworx_service_name" {
   type        = string
   description = "Name to be provided to the portworx cluster to be deployed"
-  default     = "portworx-service"
+  default     = "portworx-enterprise"
 }

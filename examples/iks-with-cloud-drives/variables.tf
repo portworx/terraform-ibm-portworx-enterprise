@@ -26,13 +26,13 @@ variable "ibmcloud_api_key" {
 variable "use_cloud_drives" {
   type        = bool
   description = "Use Cloud Drives, `true` or `false`"
-  default     = false
+  default     = true
 }
 
 variable "classic_infra" {
   type        = bool
   description = "IKS is on classic infra, `true` or `false`"
-  default     = true
+  default     = false
 }
 
 variable "portworx_version" {
@@ -111,5 +111,5 @@ variable "portworx_csi" {
 variable "portworx_service_name" {
   type        = string
   description = "Name to be provided to the portworx cluster to be deployed"
-  default     = "portworx-service"
+  default     = "portworx-enterprise"
 }

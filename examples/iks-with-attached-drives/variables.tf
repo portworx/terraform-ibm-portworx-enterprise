@@ -32,7 +32,7 @@ variable "use_cloud_drives" {
 variable "classic_infra" {
   type        = bool
   description = "IKS is on classic infra, `true` or `false`"
-  default     = true
+  default     = false
 }
 
 variable "portworx_version" {
