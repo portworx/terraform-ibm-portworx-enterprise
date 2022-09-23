@@ -1,39 +1,50 @@
 variable "region" {
-  type    = string
-  default = "us-east"
+  description = "The region Portworx will be installed in: us-south, us-east, eu-gb, eu-de, jp-tok, au-syd, etc."
+  default     = "us-east"
+  type        = string
+  nullable    = false
 }
 
 variable "iks_cluster_name" {
-  type = string
+  description = "Name of existing IKS cluster"
+  type        = string
+  nullable    = false
 }
 
 variable "resource_group" {
-  type = string
+  description = "Resource group of existing IKS Cluster "
+  type        = string
+  nullable    = false
 }
 
 variable "ibmcloud_api_key" {
   description = "Get the ibmcloud api key from https://cloud.ibm.com/iam/apikeys"
   type        = string
   sensitive   = true
+  nullable    = false
 }
 variable "use_cloud_drives" {
-  type    = bool
-  default = false
+  type        = bool
+  description = "Use Cloud Drives, `true` or `false`"
+  default     = false
 }
 
 variable "classic_infra" {
-  type    = bool
-  default = true
+  type        = bool
+  description = "IKS is on classic infra, `true` or `false`"
+  default     = true
 }
 
 variable "portworx_version" {
-  type    = string
-  default = "2.11.0"
+  type        = string
+  default     = "2.11.0"
+  description = "Image Version of Portworx Enterprise"
 }
 
 variable "upgrade_portworx" {
-  type    = bool
-  default = false
+  type        = bool
+  default     = false
+  description = "Upgrade Portworx Version to the respective `portworx_version`, `true` or `false`"
 }
 
 variable "use_external_etcd" {

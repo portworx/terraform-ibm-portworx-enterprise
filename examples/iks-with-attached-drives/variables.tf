@@ -1,49 +1,51 @@
-//TODO: Add Descriptions
 variable "region" {
-  type        = string
-  description = "(optional) describe your variable"
+  description = "The region Portworx will be installed in: us-south, us-east, eu-gb, eu-de, jp-tok, au-syd, etc."
   default     = "us-east"
+  type        = string
+  nullable    = false
 }
 
 variable "iks_cluster_name" {
+  description = "Name of existing IKS cluster"
   type        = string
-  description = "(optional) describe your variable"
+  nullable    = false
 }
 
 variable "resource_group" {
+  description = "Resource group of existing IKS Cluster "
   type        = string
-  description = "(optional) describe your variable"
+  nullable    = false
 }
 
 variable "ibmcloud_api_key" {
   description = "Get the ibmcloud api key from https://cloud.ibm.com/iam/apikeys"
   type        = string
   sensitive   = true
+  nullable    = false
 }
 variable "use_cloud_drives" {
   type        = bool
-  description = "(optional) describe your variable"
+  description = "Use Cloud Drives, `true` or `false`"
   default     = false
 }
 
 variable "classic_infra" {
   type        = bool
-  default     = false
-  description = "(optional) describe your variable"
+  description = "IKS is on classic infra, `true` or `false`"
+  default     = true
 }
 
 variable "portworx_version" {
   type        = string
   default     = "2.11.0"
-  description = "(optional) describe your variable"
+  description = "Image Version of Portworx Enterprise"
 }
 
 variable "upgrade_portworx" {
   type        = bool
-  description = "(optional) describe your variable"
   default     = false
+  description = "Upgrade Portworx Version to the respective `portworx_version`, `true` or `false`"
 }
-
 
 variable "use_external_etcd" {
   type        = bool
