@@ -13,6 +13,7 @@ module "portworx-enterprise" {
   region                    = "us-east"
   cluster_name              = "my-iks-cluster"
   resource_group            = "my-resource-group"
+  ibmcloud_api_key          = "my-api-key"
 }
 ```
 ## Features
