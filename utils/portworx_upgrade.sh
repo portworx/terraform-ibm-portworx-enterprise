@@ -27,6 +27,11 @@ if [ "$VERSION" == "" ]; then
     $CMD version
 fi
 
+$CMD history portworx
+if [[ $? -ne 0 ]]; then
+    echo "[ERROR] Portworx Installation not found! Can't upgrade!!"
+    exit 1
+
 $CMD repo add community https://raw.githubusercontent.com/IBM/charts/master/repo/community
 $CMD repo update
 $CMD get values portworx -n default > /tmp/values.yaml
@@ -37,4 +42,5 @@ if [[ $? -eq 0 ]]; then
     echo "[INFO] Successfully Upgraded!!"
 else
     echo "[ERROR] Failed to Upgrade!!"
+    exit 1
 fi
