@@ -26,7 +26,7 @@ node_num_check=false
 node_health_check=false
 node_stats_check=false
 
-####################### NUMBER OF NODES CHECK ########################### 
+####################### NUMBER OF NODES CHECK ###########################
 NUM_OF_NODES=($(kubectl get nodes -o go-template='{{len .items}}'))
 if [ "$NUM_OF_NODES" -ge "$MIN_NODE_COUNT" ]; then
     node_num_msg="Passed"
@@ -35,7 +35,7 @@ fi
 #########################################################################
 
 
-####################### NODE HEALTH CHECK ########################### 
+####################### NODE HEALTH CHECK ###########################
 HEALTHY_NODES=($(kubectl get nodes -o jsonpath='{range .items[*]}{.metadata.name}{" "}{.status.conditions[?(@.type=="Ready")].status}{"\n"}{end}' | awk '$2=="True" {print $1}'))
 NUM_OF_HEALTHY_NODES=${#HEALTHY_NODES[@]}
 if [ "$NUM_OF_HEALTHY_NODES" -eq "$NUM_OF_NODES" ]; then
@@ -46,7 +46,7 @@ NODE_HEALTH="*  Total Nodes:\t\t   $NUM_OF_NODES\t\t\t\t[$node_num_msg]\t*\n*  H
 #########################################################################
 
 
-####################### NODE STATS CHECK ########################### 
+####################### NODE STATS CHECK ###########################
 NODE_STATS=($(kubectl get nodes -o jsonpath='{range .items[*]}{@.metadata.name}{","}{@.status.allocatable.cpu}{","}{@.status.allocatable.memory}{","}{@.status.allocatable.ephemeral-storage}{"\n"}{end}'))
 checks=0
 for stats in "${NODE_STATS[@]}"; do
@@ -90,7 +90,3 @@ else
     printf "$HEADER$NODE_HEALTH$NODES_SUMMARY$FAIL_MSG"
     exit 1
 fi
-
-
-
-

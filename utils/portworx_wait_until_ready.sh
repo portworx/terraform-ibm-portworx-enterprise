@@ -40,7 +40,7 @@ while [ "$RETRIES" -le "$LIMIT" ] && [ "$READY" -lt "$DESIRED" ]; do
     kubectl get pods -l name=portworx -n kube-system | awk 'NR>1 { print "* "$1"\t\t\t [ "$3"\t"$2"\t"$5" ]\t*"  }'
     printf $DIVIDER
     echo "[INFO] All Portworx Pods are not ready, will recheck in $SLEEP_TIME secs!"
-    
+
   fi
   sleep $SLEEP_TIME
 done

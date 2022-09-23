@@ -37,7 +37,7 @@ variable "etcd_options" {
     external_etcd_connection_url = null
   }
   validation {
-    condition     = (var.etcd_options.use_external_etcd && (var.etcd_options.external_etcd_connection_url != null) && (var.etcd_options.etcd_secret_name != null)) || (! var.etcd_options.use_external_etcd && (var.etcd_options.external_etcd_connection_url == null) && (var.etcd_options.etcd_secret_name == null))
+    condition     = (var.etcd_options.use_external_etcd && (var.etcd_options.external_etcd_connection_url != null) && (var.etcd_options.etcd_secret_name != null)) || (!var.etcd_options.use_external_etcd && (var.etcd_options.external_etcd_connection_url == null) && (var.etcd_options.etcd_secret_name == null))
     error_message = "The value of `etcd_secret_name` and `external_etcd_connection_url` should be set when `use_external_etcd` is set to `true`"
   }
 }
@@ -89,7 +89,7 @@ variable "portworx_version" {
   default     = "2.11.0"
   description = "Image Version of Portworx Enterprise"
   validation {
-    condition = (tonumber(split(".", var.portworx_version)[0]) > 2) || (tonumber(split(".", var.portworx_version)[0]) == 2 && tonumber(split(".", var.portworx_version)[1]) >= 11)
+    condition     = (tonumber(split(".", var.portworx_version)[0]) > 2) || (tonumber(split(".", var.portworx_version)[0]) == 2 && tonumber(split(".", var.portworx_version)[1]) >= 11)
     error_message = "Cloud Drives are only supported for `portworx_version: 2.11.0 and above`"
   }
 }
