@@ -9,7 +9,7 @@ Include the below module definition in a `.tf` file to deploy Portworx Enterpris
 
 ```terraform
 module "portworx-enterprise" {
-  source                    = "github.com/portworx/terraform-ibm-portworx-enterprise.git"
+  source                    = "portworx/portworx-enterprise/ibm"
   region                    = "us-east"
   cluster_name              = "my-iks-cluster"
   resource_group            = "my-resource-group"
