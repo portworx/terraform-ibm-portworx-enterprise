@@ -13,7 +13,7 @@ function version { echo "$@" | awk -F. '{ printf("%d%03d%03d%03d\n", $1,$2,$3,$4
 IMAGE_VERSION=$1
 UPGRADE_REQUESTED=$2
 TIMEOUT_PER_NODE=8
-SLEEP_TIME=$((60 * $TIMEOUT_PER_NODE))
+SLEEP_TIME=120
 
 DIVIDER="\n*************************************************************************\n"
 HEADER="$DIVIDER*\t\tUpgrade Requested to Portworx Enterprise ${IMAGE_VERSION}\t\t*$DIVIDER"
@@ -133,7 +133,7 @@ ds_status=($(kubectl get ds portworx -n kube-system | awk 'NR>1 { print $2 " " $
 DESIRED="${ds_status[0]}"
 READY="${ds_status[1]}"
 UP_TO_DATE="${ds_status[2]}"
-LIMIT=$DESIRED
+LIMIT=$(($DESIRED * $TIMEOUT_PER_NODE))
 
 RETRIES=0
 while [ "$RETRIES" -le "$LIMIT" ] && [ $UP_TO_DATE -ne $DESIRED ] || [ $READY -ne $DESIRED ]; do
