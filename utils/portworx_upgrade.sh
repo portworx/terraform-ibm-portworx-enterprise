@@ -58,7 +58,7 @@ printf "[INFO] Validating if upgrade is possible...\n"
 CURRENT_VER=$(kubectl get ds portworx -n kube-system -o json | jq -r .spec.template.metadata.annotations.productVersion)
 printf "$DIVIDER*\t\t\tUpgrade Version Validation\t\t\t$DIVIDER* Requested upgrade from [ $CURRENT_VER ] to [ $IMAGE_VERSION ]\t"
 
-if [ ! -z "$CURRENT_VERSION" ] && [ $(version $IMAGE_VERSION) -ge $(version $CURRENT_VER) ]; then
+if [[ ! -z "$CURRENT_VERSION" ]] && [ $(version $IMAGE_VERSION) -ge $(version $CURRENT_VER) ]; then
     printf "[Passed]\t*$DIVIDER"
 else
     printf "[Failed]\t*$DIVIDER"
