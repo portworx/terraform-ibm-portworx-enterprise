@@ -136,7 +136,7 @@ UP_TO_DATE="${ds_status[2]}"
 LIMIT=$DESIRED
 
 RETRIES=0
-while [ "$RETRIES" -le "$LIMIT" ] && [ $UP_TO_DATE -ne $DESIRED ] || [ $READY -ne $DESIRED ]; do 
+while [ "$RETRIES" -le "$LIMIT" ] && [ $UP_TO_DATE -ne $DESIRED ] || [ $READY -ne $DESIRED ]; do
     ds_status=($(kubectl get ds portworx -n kube-system | awk 'NR>1 { print $1 " " $2 " " $4 " " $5 }'))
     DESIRED="${ds_status[1]}"
     READY="${ds_status[2]}"
