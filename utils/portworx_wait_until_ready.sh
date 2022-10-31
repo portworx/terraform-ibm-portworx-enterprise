@@ -18,7 +18,7 @@ while [ "$RETRIES" -le "$LIMIT" ]; do
     ((RETRIES++))
   else
     ds_status=($(kubectl describe ds portworx -n kube-system | grep "Pods Status" | cut -d ":" -f 2))
-    printf "$HEADER*\t\t\t\tDaemonset Status\t\t\t*\n* portworx\t[ ${ds_status[*]} ]\t*$DIVIDER*\t\t\t\tPods ( $READY/$DESIRED )\t\t\t\t*$DIVIDER"
+    printf "$HEADER*\t\t\t\tDaemonset Status\t\t\t*\n* portworx\t[ ${ds_status[*]} ]\t*$DIVIDER"
     DESIRED="${ds_state[0]}"
     READY="${ds_state[1]}"
     break
