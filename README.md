@@ -34,8 +34,9 @@ This terraform module provides the following features for seamless adoption:
 ## Examples
 
 The below hyperlinks guide you to understand and demonstrate the features and capabilities of this Terraform module:
+- [IKS Cluster created using VPC Gen 2 _(Block Volumes already attached to the k8s worker nodes by the user)_](https://github.com/portworx/terraform-ibm-portworx-enterprise/tree/main/examples/iks-with-attached-drives)
 - [Installation on IKS Cluster created using VPC Gen 2 with Cloud Drives](https://github.com/portworx/terraform-ibm-portworx-enterprise/tree/main/examples/iks-with-cloud-drives)
-
+- [Worker Node Replacement on IKS Cluster created using VPC Gen 2 using Cloud Drives](https://github.com/portworx/terraform-ibm-portworx-enterprise/tree/main/examples/iks-worker-node-replace)
 ## Requirements
 
 The following are requirements needed to be installed on the host machine where the terraform commands will be issued.

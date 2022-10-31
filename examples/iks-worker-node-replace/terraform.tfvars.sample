@@ -1,0 +1,5 @@
+resource_group   = ""
+region           = ""
+iks_cluster_name = ""
+worker_ids       = []
+replace_all_workers = false
