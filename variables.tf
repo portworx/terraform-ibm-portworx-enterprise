@@ -86,7 +86,7 @@ variable "classic_infra" {
 
 variable "portworx_version" {
   type        = string
-  default     = "2.11.0"
+  default     = "2.11.4"
   description = "Image Version of Portworx Enterprise"
   validation {
     condition     = (tonumber(split(".", var.portworx_version)[0]) > 2) || (tonumber(split(".", var.portworx_version)[0]) == 2 && tonumber(split(".", var.portworx_version)[1]) >= 11)
