@@ -1,6 +1,6 @@
 #!/bin/bash
 
-NAMESPACE="${NAMESPACE}"
+NAMESPACE="kube-system"
 
 # Current context
 echo "[INFO] Kube Config Path: $CONFIGPATH"
