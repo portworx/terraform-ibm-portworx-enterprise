@@ -1,76 +1,29 @@
 #!/bin/bash
-SLEEP_TIME=20
+# TODO: Parameterise $NAMESPACE
+NAMESPACE="kube-system"
+PX_CLUSTER_NAME=$2
+
+STATUS=""
+SLEEP_TIME=30
 LIMIT=10
-DIVIDER="\n*************************************************************************\n"
-HEADER="$DIVIDER*\t\t\tPortworx Resources Status\t\t\t*$DIVIDER"
-
-echo "[INFO] Kube Config Path: $CONFIGPATH"
-export KUBECONFIG=$CONFIGPATH
-echo "Current Kube Context: $(kubectl config current-context)"
-DESIRED=0
-READY=0
-
 RETRIES=0
-while [ "$RETRIES" -le "$LIMIT" ]; do
-  if ! ds_state=($( kubectl get -n kube-system ds portworx -o jsonpath='{.status.desiredNumberScheduled} {.status.numberReady}')); then
-    echo "[WARN] Portworx Daemon Set Not Found, will retry in $SLEEP_TIME secs!"
-    sleep $SLEEP_TIME
+sleep 90
+
+while [ "$RETRIES" -le "$LIMIT" ]
+do
+    STATUS=$(kubectl get storagecluster ${PX_CLUSTER_NAME} -n ${NAMESPACE} -o jsonpath='{.items[*].status.phase}')
+    if [ "$STATUS" == "Online" ]; then
+        CLUSTER_ID=$(kubectl get storagecluster ${PX_CLUSTER_NAME} -n ${NAMESPACE} -o jsonpath='{.items[*].status.clusterUid}')
+        printf "[SUCCESS] Portworx Storage Cluster is Online. Cluster ID: ($CLUSTER_ID)\n"
+        break
+    fi
+    printf "[INFO] Portworx Storage Cluster Status: [ $STATUS ]\n"
+    printf "[INFO] Waiting for Portworx Storage Cluster. (Retry in $SLEEP_TIME secs)\n"
     ((RETRIES++))
-  else
-    ds_status=($(kubectl describe ds portworx -n kube-system | grep "Pods Status" | cut -d ":" -f 2))
-    printf "$HEADER*\t\t\t\tDaemonset Status\t\t\t*\n* portworx\t[ ${ds_status[*]} ]\t*$DIVIDER"
-    DESIRED="${ds_state[0]}"
-    READY="${ds_state[1]}"
-    break
-  fi
-done
-if [ "$RETRIES" -gt "$LIMIT" ]; then
-  echo "[ERROR] All Retries Exhausted!"
-  exit 1
-fi
-
-RETRIES=0
-while [ "$RETRIES" -le "$LIMIT" ] && [ "$READY" -lt "$DESIRED" ]; do
-  if ! ds_status=($(kubectl describe ds portworx -n kube-system | grep "Pods Status" | cut -d ":" -f 2)); then
-    echo "[WARN] Portworx Pods Status Not Found, will retry in $SLEEP_TIME secs!"
-    ((RETRIES++))
-  else
-    READY=$(kubectl get -n kube-system ds portworx -o jsonpath='{.status.numberReady}')
-    printf "$HEADER*\t\t\t\tDaemonset Status\t\t\t*\n* portworx\t[ ${ds_status[*]} ]\t*$DIVIDER*\t\t\t\tPods ( $READY/$DESIRED )\t\t\t\t*\n"
-    kubectl get pods -l name=portworx -n kube-system | awk 'NR>1 { print "* "$1"\t\t\t [ "$3"\t"$2"\t"$5" ]\t*"  }'
-    printf $DIVIDER
-    echo "[INFO] All Portworx Pods are not ready, will recheck in $SLEEP_TIME secs!"
-
-  fi
-  sleep $SLEEP_TIME
-done
-if [ "$RETRIES" -gt "$LIMIT" ]; then
-  echo "[ERROR] All Retries Exhausted!"
-  exit 1
-fi
-
-
-RETRIES=0
-while [ "$RETRIES" -le "$LIMIT" ]; do
-  echo "[INFO] Getting Portworx Installation Status..."
-  PX_POD=$(kubectl get pods -l name=portworx -n kube-system -o custom-columns=":metadata.name" | awk 'END{print}')
-  if ! STATUS=$(kubectl exec $PX_POD -n kube-system -- /opt/pwx/bin/pxctl status --json | jq -r '.status'); then
-    echo "[WARN] Portworx Status Not Found, will retry in $SLEEP_TIME secs!"
-    (( RETRIES++ ))
     sleep $SLEEP_TIME
-  elif [ "$STATUS" == "STATUS_OK" ]; then
-    ds_status=($(kubectl describe ds portworx -n kube-system | grep "Pods Status" | cut -d ":" -f 2))
-    printf "$HEADER*\t\t\t\tDaemonset Status\t\t\t*\n* portworx\t[ ${ds_status[*]} ]\t*$DIVIDER*\t\t\t\tPods ( $READY/$DESIRED )\t\t\t\t*\n"
-    kubectl get pods -l name=portworx -n kube-system | awk 'NR>1 { print "* "$1"\t\t\t [ "$3"\t"$2"\t"$5" ]\t*"  }'
-    printf "$DIVIDER*\t\t\tPortworx Status: $STATUS\t\t\t*$DIVIDER"
-    echo "[INFO] Successful Installation!!"
-    break
-  else
-    echo "[INFO] Portworx Status: $STATUS"
-    sleep $SLEEP_TIME
-  fi
 done
+
 if [ "$RETRIES" -gt "$LIMIT" ]; then
-  echo "[ERROR] All Retries Exhausted!"
-  exit 1
+    printf "[ERROR] All Retries Exhausted!\n"
+    exit 1
 fi
