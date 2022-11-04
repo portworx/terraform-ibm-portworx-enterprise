@@ -128,3 +128,25 @@ if [ "$RETRIES" -gt "$LIMIT" ]; then
     printf "[ERROR] All Retries Exhausted!\n"
     exit 1
 fi
+
+RETRIES=0
+while [ "$RETRIES" -le "$LIMIT" ]; do
+    echo "[INFO] Getting Portworx Installation Status..."
+    PX_POD=$(kubectl get pods -l name=portworx -n ${NAMESPACE} -o custom-columns=":metadata.name" | awk 'END{print}')
+    if ! STATUS=$(kubectl exec $PX_POD -n ${NAMESPACE} -- /opt/pwx/bin/pxctl status --json | jq -r '.status'); then
+        echo "[WARN] Portworx Status Not Found, will retry in $SLEEP_TIME secs!"
+        (( RETRIES++ ))
+        sleep $SLEEP_TIME
+    elif [ "$STATUS" == "STATUS_OK" ]; then
+        printf "$DIVIDER*\t\t\tPortworx Status: $STATUS\t\t\t*$DIVIDER"
+        echo "[INFO] Successful Upgrade!!"
+        break
+    else
+        echo "[INFO] Portworx Status: $STATUS"
+        sleep $SLEEP_TIME
+    fi
+done
+if [ "$RETRIES" -gt "$LIMIT" ]; then
+    echo "[ERROR] All Retries Exhausted!"
+    exit 1
+fi

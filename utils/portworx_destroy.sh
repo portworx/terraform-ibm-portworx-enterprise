@@ -1,6 +1,6 @@
 #!/bin/bash
 
-NAMESPACE="kube-system"
+NAMESPACE="${NAMESPACE}"
 
 # Current context
 echo "[INFO] Kube Config Path: $CONFIGPATH"
@@ -22,9 +22,9 @@ if [ "$VERSION" == "" ]; then
     $CMD version
 fi
 
-# $CMD repo add ibm-helm https://raw.githubusercontent.com/portworx/ibm-helm/master/repo/stable
-# $CMD repo update
-# $CMD upgrade portworx ibm-helm/portworx --reuse-values --set deleteStrategy.type=Uninstall -n $NAMESPACE
+$CMD repo add ibm-helm https://raw.githubusercontent.com/portworx/ibm-helm/master/repo/stable
+$CMD repo update
+$CMD upgrade portworx ibm-helm/portworx --reuse-values --set deleteStrategy.type=Uninstall -n $NAMESPACE
 
 
 echo "[INFO] Listing releases ... "
@@ -37,3 +37,7 @@ else
     echo "[ERROR] Failed to Uninstall!!!"
     exit 1
 fi
+
+echo "[INFO] Cleaning up portworx configmaps..."
+kubectl get configmap -n ${NAMESPACE} -o custom-columns=":metadata.name" | grep px-bootstrap | xargs -I {} kubectl delete configmap -n ${NAMESPACE} {}
+kubectl get configmap -n ${NAMESPACE} -o custom-columns=":metadata.name" | grep px-cloud-drive | xargs -I {} kubectl delete configmap -n ${NAMESPACE} {}
