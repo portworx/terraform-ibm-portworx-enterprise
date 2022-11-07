@@ -72,7 +72,7 @@ resource "null_resource" "portworx_destroy" {
   provisioner "local-exec" {
     when        = destroy
     working_dir = "${path.module}/utils/"
-    command     = "/bin/bash portworx_destroy.sh"
+    command     = "/bin/bash portworx_destroy.sh ${var.delete_strategy}"
     on_failure  = fail
   }
 }

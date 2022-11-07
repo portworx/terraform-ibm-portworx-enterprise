@@ -107,13 +107,20 @@ variable "portworx_service_name" {
   nullable    = false
 }
 
-
+variable "delete_strategy" {
+  type        = string
+  description = "Delete Strategy to be used when uninstalling."
+  default     = "Uninstall"
+  validation {
+    condition     = contains(["Uninstall", "UninstallAndWipe"], var.delete_strategy)
+    error_message = "The value of `delete_strategy` should be any of the following:\nUninstall\nUninstallAndWipe"
+  }
+}
 variable "tags" {
   type        = list(string)
   description = "Optional Tags to be add, if required."
   default     = []
 }
-
 
 variable "cloud_drive_options" {
   description = <<-_EOT
