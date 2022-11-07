@@ -22,7 +22,7 @@ resource "ibm_resource_instance" "portworx" {
 
   parameters = {
     apikey                    = var.ibmcloud_api_key
-    cluster_name              = local.px_cluster_name
+    cluster_name              = var.cluster_name
     clusters                  = var.cluster_name
     etcd_endpoint             = var.etcd_options.use_external_etcd ? var.etcd_options.external_etcd_connection_url : null
     etcd_secret               = var.etcd_options.use_external_etcd ? var.etcd_options.etcd_secret_name : null
@@ -44,7 +44,7 @@ resource "ibm_resource_instance" "portworx" {
 
   provisioner "local-exec" {
     working_dir = "${path.module}/utils/"
-    command     = "/bin/bash portworx_wait_until_ready.sh ${local.px_cluster_name}"
+    command     = "/bin/bash portworx_wait_until_ready.sh ${var.cluster_name}"
     on_failure  = fail
   }
   lifecycle {
@@ -63,7 +63,7 @@ resource "null_resource" "portworx_upgrade" {
   }
   provisioner "local-exec" {
     working_dir = "${path.module}/utils/"
-    command     = "/bin/bash portworx_upgrade.sh ${var.portworx_version} ${var.upgrade_portworx} ${local.px_cluster_name}"
+    command     = "/bin/bash portworx_upgrade.sh ${var.portworx_version} ${var.upgrade_portworx} ${var.cluster_name}"
     on_failure  = fail
   }
 }
