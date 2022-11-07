@@ -56,7 +56,7 @@ fi
 
 #Version Validation
 printf "[INFO] Validating if upgrade is possible...\n"
-CURRENT_VER=$(kubectl get storagecluster ${PX_CLUSTER_NAME} -n ${NAMESPACE} -o jsonpath={{.items[*].status.version})
+CURRENT_VER=$(kubectl get storagecluster ${PX_CLUSTER_NAME} -n ${NAMESPACE} -o jsonpath={.status.version})
 printf "$DIVIDER*\t\t\tUpgrade Version Validation\t\t\t$DIVIDER* Requested upgrade from [ $CURRENT_VER ] to [ $IMAGE_VERSION ]\t"
 
 if [[ ! -z "$CURRENT_VER" ]] && [ $(version $IMAGE_VERSION) -ge $(version $CURRENT_VER) ]; then
@@ -76,12 +76,12 @@ if ! sc_state=$(kubectl get storagecluster ${PX_CLUSTER_NAME} -n ${NAMESPACE}); 
     printf "[ERROR] Portworx Storage Cluster Not Found, will not proceed with the upgrade!! Please install Portworx Enterprise and then try to upgrade.\n"
     exit 1
 else
-    STATUS=$(kubectl get storagecluster ${PX_CLUSTER_NAME} -n ${NAMESPACE} -o jsonpath='{.items[*].status.phase}')
+    STATUS=$(kubectl get storagecluster ${PX_CLUSTER_NAME} -n ${NAMESPACE} -o jsonpath='{.status.phase}')
     if [ "$STATUS" != "Online" ]; then
         printf "[ERROR] Portworx Storage Cluster is not Online. Cluster Status: ($STATUS), will not proceed with the upgrade!!\n"
         exit 1
     else
-        state=$(kubectl get storagecluster ${PX_CLUSTER_NAME} -n ${NAMESPACE} -o jsonpath='{.items[*].status}')
+        state=$(kubectl get storagecluster ${PX_CLUSTER_NAME} -n ${NAMESPACE} -o jsonpath='{.status}')
         printf "[CHECK PASSED] Portworx Storage Cluster is Online.\n$state\n"
     fi
 fi
@@ -112,9 +112,9 @@ sleep 120
 
 while [ "$RETRIES" -le "$LIMIT" ]
 do
-    STATUS=$(kubectl get storagecluster ${PX_CLUSTER_NAME} -n ${NAMESPACE} -o jsonpath='{.items[*].status.phase}')
+    STATUS=$(kubectl get storagecluster ${PX_CLUSTER_NAME} -n ${NAMESPACE} -o jsonpath='{.status.phase}')
     if [ "$STATUS" == "Online" ]; then
-        CLUSTER_ID=$(kubectl get storagecluster ${PX_CLUSTER_NAME} -n ${NAMESPACE} -o jsonpath='{.items[*].status.clusterUid}')
+        CLUSTER_ID=$(kubectl get storagecluster ${PX_CLUSTER_NAME} -n ${NAMESPACE} -o jsonpath='{.status.clusterUid}')
         printf "[SUCCESS] Portworx Storage Cluster is Online. Cluster ID: ($CLUSTER_ID)\n"
         break
     fi
