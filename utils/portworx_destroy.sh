@@ -24,7 +24,7 @@ fi
 
 $CMD repo add ibm-helm https://raw.githubusercontent.com/portworx/ibm-helm/master/repo/stable
 $CMD repo update
-$CMD upgrade portworx ibm-helm/portworx --reuse-values --set deleteStrategy.type=Uninstall -n $NAMESPACE > /dev/null
+$CMD upgrade portworx ibm-helm/portworx --reuse-values --set deleteStrategy.type=UninstallAndWipe -n $NAMESPACE > /dev/null
 
 
 echo "[INFO] Listing releases ... "
