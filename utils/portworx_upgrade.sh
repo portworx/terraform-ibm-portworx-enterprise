@@ -82,7 +82,8 @@ else
         exit 1
     else
         state=$(kubectl get storagecluster ${PX_CLUSTER_NAME} -n ${NAMESPACE} -o jsonpath='{.status}')
-        printf "[CHECK PASSED] Portworx Storage Cluster is Online.\n$state\n"
+        printf "[CHECK PASSED] Portworx Storage Cluster is Online.\n"
+        echo $($state | jq)
     fi
 fi
 
@@ -94,9 +95,9 @@ fi
 printf "[INFO] Installing new Helm Charts...\n"
 $CMD repo add ibm-helm https://raw.githubusercontent.com/portworx/ibm-helm/master/repo/stable
 $CMD repo update
-$CMD get values portworx -n default > /tmp/values.yaml
+$CMD get values portworx -n ${NAMESPACE} > /tmp/values.yaml
 sed -i -E -e 's@PX_IMAGE=icr.io/ext/portworx/px-enterprise:.*$@PX_IMAGE=icr.io/ext/portworx/px-enterprise:'"$IMAGE_VERSION"'@g' /tmp/values.yaml
-$CMD upgrade portworx ibm-helm/portworx -f /tmp/values.yaml --set imageVersion=$IMAGE_VERSION
+$CMD upgrade portworx ibm-helm/portworx -f /tmp/values.yaml --set imageVersion=$IMAGE_VERSION -n ${NAMESPACE}
 
 if [[ $? -eq 0 ]]; then
     echo "[INFO] Upgrade Triggered Succesfully, will monitor the storage cluster!!"
