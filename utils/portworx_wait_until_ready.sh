@@ -3,6 +3,7 @@
 NAMESPACE="kube-system"
 PX_CLUSTER_NAME=$2
 
+DIVIDER="\n*************************************************************************\n"
 STATUS=""
 SLEEP_TIME=30
 LIMIT=10
@@ -28,6 +29,7 @@ if [ "$RETRIES" -gt "$LIMIT" ]; then
     exit 1
 fi
 
+sleep 60
 RETRIES=0
 while [ "$RETRIES" -le "$LIMIT" ]; do
   echo "[INFO] Getting Portworx Installation Status..."
