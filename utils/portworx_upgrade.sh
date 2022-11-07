@@ -81,9 +81,8 @@ else
         printf "[ERROR] Portworx Storage Cluster is not Online. Cluster Status: ($STATUS), will not proceed with the upgrade!!\n"
         exit 1
     else
-        state=$(kubectl get storagecluster ${PX_CLUSTER_NAME} -n ${NAMESPACE} -o jsonpath='{.status}')
-        printf "[CHECK PASSED] Portworx Storage Cluster is Online.\n"
-        echo $($state | jq)
+        state=$(kubectl get storagecluster ${PX_CLUSTER_NAME} -n ${NAMESPACE} -o jsonpath='{.status}' | jq)
+        printf "[CHECK PASSED] Portworx Storage Cluster is Online.\n$state\n"
     fi
 fi
 
