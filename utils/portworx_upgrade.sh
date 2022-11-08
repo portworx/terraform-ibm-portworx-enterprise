@@ -135,18 +135,19 @@ fi
 RETRIES=0
 DESIRED=$(kubectl get pods -l name=portworx -n ${NAMESPACE} --no-headers | wc -l)
 READY=0
+LIMIT=30
 while [ "$RETRIES" -le "$LIMIT" ]; do
     printf "[INFO] Getting Portworx Storage Class Pods Status..\n"
-    READY=$(kubectl get pods -l name=portworx -n ${NAMESPACE} -o custom-columns=":metadata.name,:status.phase,:status.containerStatuses[0].ready" | awk -v IMAGE_VERSION="${IMAGE_VERSION}"  '{split($3,a,":")} a[2] == IMAGE_VERSION && $3 == "true"  { print $0 }' | wc -l)
-    S=$(kubectl get pods -l name=portworx -n ${NAMESPACE} -o custom-columns=":metadata.name,:status.phase,:status.containerStatuses[0].ready")
+    READY=$(kubectl get pods -l name=portworx -n ${NAMESPACE} -o custom-columns=":metadata.name,:spec.containers[0].image,:status.containerStatuses[0].ready" | awk -v IMAGE_VERSION="${IMAGE_VERSION}"  '{split($2,a,":")} a[2] == IMAGE_VERSION && $3 == "true"  { print $0 }' | wc -l)
+    S=$(kubectl get pods -l name=portworx -n ${NAMESPACE} -o custom-columns=":metadata.name,:status.phase,:spec.containers[0].image")
     printf "$DIVIDER*\t\t\t\tPods (${READY// /}/${DESIRED// /})\t\t\t\t*$DIVIDER$S$DIVIDER"
     if [ "${READY// /}" -eq "${DESIRED// /}" ]; then
         printf "[SUCCESS] All Portworx Pods have been upgraded to version: ${IMAGE_VERSION}"
         break
     fi
     ((RETRIES++))
-    sleep $SLEEP_TIME
-    printf "[INFO] Waiting for Portworx Storage Cluster. (Retry in $SLEEP_TIME secs)\n"
+    sleep 300
+    printf "[INFO] Waiting for Portworx Storage Cluster. (Retry in 300 secs)\n"
 done
 if [ "$RETRIES" -gt "$LIMIT" ]; then
     echo "[ERROR] All Retries Exhausted!"
