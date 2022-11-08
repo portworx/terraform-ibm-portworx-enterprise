@@ -106,19 +106,21 @@ else
 fi
 
 STATUS=""
-LIMIT=10
+LIMIT=20
 RETRIES=0
-sleep 120
+sleep $SLEEP_TIME
 
 while [ "$RETRIES" -le "$LIMIT" ]
 do
     STATUS=$(kubectl get storagecluster ${PX_CLUSTER_NAME} -n ${NAMESPACE} -o jsonpath='{.status.phase}')
-    if [ "$STATUS" == "Online" ]; then
-        CLUSTER_ID=$(kubectl get storagecluster ${PX_CLUSTER_NAME} -n ${NAMESPACE} -o jsonpath='{.status.clusterUid}')
-        printf "[SUCCESS] Portworx Storage Cluster is Online. Cluster ID: ($CLUSTER_ID)\n"
+    CLUSTER_VERSION=$(kubectl get storagecluster ${PX_CLUSTER_NAME} -n ${NAMESPACE} -o jsonpath='{.status.version}')
+    if [ "$STATUS" == "Online" ] && [ "$CLUSTER_VERSION" == "$IMAGE_VERSION" ]; then
+        S=$(kubectl get storagecluster ${PX_CLUSTER_NAME} -n ${NAMESPACE} -o jsonpath='{.status}' | jq)
+        printf "[SUCCESS] Portworx Storage Cluster is Online.\n$S$DIVIDER"
         break
     fi
     printf "[INFO] Portworx Storage Cluster Status: [ $STATUS ]\n"
+    printf "[INFO] Portworx Storage Cluster Version: [ $CLUSTER_VERSION ]\n"
     printf "[INFO] Waiting for Portworx Storage Cluster. (Retry in $SLEEP_TIME secs)\n"
     ((RETRIES++))
     sleep $SLEEP_TIME
@@ -128,6 +130,29 @@ if [ "$RETRIES" -gt "$LIMIT" ]; then
     printf "[ERROR] All Retries Exhausted!\n"
     exit 1
 fi
+
+
+RETRIES=0
+DESIRED=$(kubectl get pods -l name=portworx -n ${NAMESPACE} --no-headers | wc -l)
+READY=0
+while [ "$RETRIES" -le "$LIMIT" ]; do
+    printf "[INFO] Getting Portworx Storage Class Pods Status..\n"
+    READY=$(kubectl get pods -l name=portworx -n ${NAMESPACE} -o custom-columns=":metadata.name,:status.phase,:status.containerStatuses[0].ready" | awk -v IMAGE_VERSION="${IMAGE_VERSION}"  '{split($3,a,":")} a[2] == IMAGE_VERSION && $3 == "true"  { print $0 }' | wc -l)
+    S=$(kubectl get pods -l name=portworx -n ${NAMESPACE} -o custom-columns=":metadata.name,:status.phase,:status.containerStatuses[0].ready")
+    printf "$DIVIDER*\t\t\t\tPods (${READY// /}/${DESIRED// /})\t\t\t\t*$DIVIDER$S$DIVIDER"
+    if [ "${READY// /}" -eq "${DESIRED// /}" ]; then
+        printf "[SUCCESS] All Portworx Pods have been upgraded to version: ${IMAGE_VERSION}"
+        break
+    fi
+    ((RETRIES++))
+    sleep $SLEEP_TIME
+    printf "[INFO] Waiting for Portworx Storage Cluster. (Retry in $SLEEP_TIME secs)\n"
+done
+if [ "$RETRIES" -gt "$LIMIT" ]; then
+    echo "[ERROR] All Retries Exhausted!"
+    exit 1
+fi
+
 
 RETRIES=0
 while [ "$RETRIES" -le "$LIMIT" ]; do

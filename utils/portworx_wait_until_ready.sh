@@ -6,7 +6,7 @@ PX_CLUSTER_NAME=$2
 DIVIDER="\n*************************************************************************\n"
 STATUS=""
 SLEEP_TIME=30
-LIMIT=10
+LIMIT=15
 RETRIES=0
 sleep 90
 
@@ -29,7 +29,27 @@ if [ "$RETRIES" -gt "$LIMIT" ]; then
     exit 1
 fi
 
-sleep 60
+
+RETRIES=0
+DESIRED=$(kubectl get pods -l name=portworx -n ${NAMESPACE} --no-headers | wc -l)
+READY=0
+while [ "$RETRIES" -le "$LIMIT" ]; do
+    READY=$(kubectl get pods -l name=portworx -n ${NAMESPACE} -o custom-columns=":metadata.name,:status.phase,:status.containerStatuses[0].ready" | awk '$3 == "true"  { print $0 }' | wc -l)
+    POD_STATUS=$(kubectl get pods -l name=portworx -n ${NAMESPACE} -o custom-columns=":metadata.name,:status.phase")
+    printf "$DIVIDER*\t\t\t\tPods (${READY// /}/${DESIRED// /})\t\t\t\t*$DIVIDER$POD_STATUS$DIVIDER"
+    if [ "${READY// /}" -eq "${DESIRED// /}" ]; then
+        printf "[SUCCESS] All Portworx Pods are Ready.\n"
+        break
+    fi
+    ((RETRIES++))
+    sleep $SLEEP_TIME
+    printf "[INFO] Getting Portworx Storage Class Pods Status... (Retry in $SLEEP_TIME secs)\n"
+done
+if [ "$RETRIES" -gt "$LIMIT" ]; then
+    echo "[ERROR] All Retries Exhausted!"
+    exit 1
+fi
+
 RETRIES=0
 while [ "$RETRIES" -le "$LIMIT" ]; do
   echo "[INFO] Getting Portworx Installation Status..."
