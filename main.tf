@@ -70,7 +70,7 @@ resource "null_resource" "portworx_upgrade" {
 
 resource "null_resource" "portworx_destroy" {
   triggers = {
-    ds = var.delete_strategy,
+    ds = var.delete_strategy
     ns = var.namespace
   }
   provisioner "local-exec" {
