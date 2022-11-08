@@ -147,7 +147,7 @@ while [ "$RETRIES" -le "$LIMIT" ]; do
     fi
     ((RETRIES++))
     sleep 150
-    printf "[INFO] Waiting for Portworx Storage Cluster. (Retry in 300 secs)\n"
+    printf "[INFO] Waiting for Portworx Storage Cluster. (Retry in 150 secs)\n"
 done
 if [ "$RETRIES" -gt "$LIMIT" ]; then
     echo "[ERROR] All Retries Exhausted!"
