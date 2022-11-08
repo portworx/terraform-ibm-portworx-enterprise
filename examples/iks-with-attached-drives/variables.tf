@@ -94,3 +94,9 @@ variable "delete_strategy" {
   description = "Delete Strategy to be used when uninstalling."
   default     = "UninstallAndWipe"
 }
+
+variable "namespace" {
+  description = "Namespace to deploy Portworx Enterprise in the IKS"
+  type        = string
+  default     = "kube-system"
+}
