@@ -1,7 +1,7 @@
 #!/bin/bash
 # TODO: Parameterise $NAMESPACE
 NAMESPACE="kube-system"
-PX_CLUSTER_NAME=$2
+PX_CLUSTER_NAME=$1
 
 DIVIDER="\n*************************************************************************\n"
 STATUS=""
@@ -12,10 +12,10 @@ sleep 90
 
 while [ "$RETRIES" -le "$LIMIT" ]
 do
-    STATUS=$(kubectl get storagecluster ${PX_CLUSTER_NAME} -n ${NAMESPACE} -o jsonpath='{.items[*].status.phase}')
-    if [ "$STATUS" == "Online" ]; then
-        CLUSTER_ID=$(kubectl get storagecluster ${PX_CLUSTER_NAME} -n ${NAMESPACE} -o jsonpath='{.items[*].status.clusterUid}')
-        printf "[SUCCESS] Portworx Storage Cluster is Online. Cluster ID: ($CLUSTER_ID)\n"
+    STATUS=$(kubectl get storagecluster ${PX_CLUSTER_NAME} -n ${NAMESPACE} -o yaml | grep phase | cut -d ":" -f2)
+    if [ "${STATUS// /}" == "Online" ]; then
+        CLUSTER_ID=$(kubectl get storagecluster ${PX_CLUSTER_NAME} -n ${NAMESPACE} -o yaml | grep clusterUid | cut -d ":" -f2)
+        printf "[SUCCESS] Portworx Storage Cluster is Online. Cluster ID: (${CLUSTER_ID// /})\n"
         break
     fi
     printf "[INFO] Portworx Storage Cluster Status: [ $STATUS ]\n"
