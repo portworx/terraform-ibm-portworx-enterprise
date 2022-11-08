@@ -115,7 +115,7 @@ variable "portworx_service_name" {
 
 variable "delete_strategy" {
   type        = string
-  description = "Delete Strategy to be used when uninstalling."
+  description = "Delete Strategy to be used when uninstalling, use `Uninstall` or `UninstallAndWipe`"
   default     = "Uninstall"
   validation {
     condition     = contains(["Uninstall", "UninstallAndWipe"], var.delete_strategy)
