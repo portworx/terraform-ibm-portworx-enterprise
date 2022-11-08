@@ -31,3 +31,8 @@ if [[ $? -eq 0 ]]; then
 else
     echo "[ERROR] Failed to Uninstall!!!"
 fi
+
+echo "[INFO] attempt to cleanup portworx-operator and portworx-hook clusterrole"
+kubectl delete clusterrole/portworx-hook clusterrole/portworx-operator
+echo "[INFO] attempt to cleanup portworx-operator and portworx-hook clusterrolebinding"
+kubectl delete clusterrolebinding/portworx-hook clusterrolebinding/portworx-operator
