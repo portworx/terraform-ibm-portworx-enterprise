@@ -60,6 +60,12 @@ variable "pwx_plan" {
   }
 }
 
+variable "namespace" {
+  description = "Namespace to deploy Portworx Enterprise in the IKS"
+  type        = string
+  default     = "kube-system"
+}
+
 variable "secret_type" {
   description = "secret type"
   type        = string

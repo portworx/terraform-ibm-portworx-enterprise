@@ -9,8 +9,7 @@
 # Wait for the pods to be restarted
 function version { echo "$@" | awk -F. '{ printf("%d%03d%03d%03d\n", $1,$2,$3,$4); }'; }
 
-# TODO: Parameterise $NAMESPACE
-NAMESPACE="kube-system"
+NAMESPACE=$4
 PX_CLUSTER_NAME=$3
 IMAGE_VERSION=$1
 UPGRADE_REQUESTED=$2

@@ -39,12 +39,12 @@ resource "ibm_resource_instance" "portworx" {
     storageClassName          = (var.cloud_drive_options.num_cloud_drives >= 1) ? element(var.cloud_drive_options.storage_classes, 0) : ""
     storageClassName2         = (var.cloud_drive_options.num_cloud_drives >= 2) ? element(var.cloud_drive_options.storage_classes, 1) : ""
     storageClassName3         = (var.cloud_drive_options.num_cloud_drives == 3) ? element(var.cloud_drive_options.storage_classes, 2) : ""
-    namespace                 = "kube-system"
+    namespace                 = var.namespace
   }
 
   provisioner "local-exec" {
     working_dir = "${path.module}/utils/"
-    command     = "/bin/bash portworx_wait_until_ready.sh ${local.px_cluster_name}"
+    command     = "/bin/bash portworx_wait_until_ready.sh ${local.px_cluster_name} ${var.namespace}"
     on_failure  = fail
   }
   lifecycle {
@@ -63,7 +63,7 @@ resource "null_resource" "portworx_upgrade" {
   }
   provisioner "local-exec" {
     working_dir = "${path.module}/utils/"
-    command     = "/bin/bash portworx_upgrade.sh ${var.portworx_version} ${var.upgrade_portworx} ${local.px_cluster_name}"
+    command     = "/bin/bash portworx_upgrade.sh ${var.portworx_version} ${var.upgrade_portworx} ${local.px_cluster_name} ${var.namespace}"
     on_failure  = fail
   }
 }
@@ -71,11 +71,12 @@ resource "null_resource" "portworx_upgrade" {
 resource "null_resource" "portworx_destroy" {
   triggers = {
     ds = var.delete_strategy
+    ns = var.namespace
   }
   provisioner "local-exec" {
     when        = destroy
     working_dir = "${path.module}/utils/"
-    command     = "/bin/bash portworx_destroy.sh ${self.triggers.ds}"
+    command     = "/bin/bash portworx_destroy.sh ${self.triggers.ds} ${self.triggers.ns}"
     on_failure  = fail
   }
 }
