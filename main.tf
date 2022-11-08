@@ -70,12 +70,12 @@ resource "null_resource" "portworx_upgrade" {
 
 resource "null_resource" "portworx_destroy" {
   triggers = {
-    delete_strategy = var.delete_strategy
+    ds = var.delete_strategy
   }
   provisioner "local-exec" {
     when        = destroy
     working_dir = "${path.module}/utils/"
-    command     = "/bin/bash portworx_destroy.sh ${self.triggers.delete_strategy}"
+    command     = "/bin/bash portworx_destroy.sh ${self.triggers.ds}"
     on_failure  = fail
   }
 }
