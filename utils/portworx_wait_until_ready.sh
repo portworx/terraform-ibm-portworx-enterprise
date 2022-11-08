@@ -8,7 +8,7 @@ STATUS=""
 SLEEP_TIME=30
 LIMIT=15
 RETRIES=0
-# sleep 90
+sleep 90
 
 while [ "$RETRIES" -le "$LIMIT" ]
 do
