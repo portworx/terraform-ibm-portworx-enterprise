@@ -1,6 +1,6 @@
 #!/bin/bash
 
-NAMESPACE="kube-system"
+NAMESPACE=$2
 DELETE_STRATEGY=$1
 # Current context
 echo "[INFO] Kube Config Path: $CONFIGPATH"
