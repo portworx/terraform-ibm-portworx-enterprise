@@ -1,7 +1,7 @@
 #!/bin/bash
 # TODO: Parameterise $NAMESPACE
 NAMESPACE="kube-system"
-PX_CLUSTER_NAME=$2
+PX_CLUSTER_NAME=$1
 
 DIVIDER="\n*************************************************************************\n"
 STATUS=""
