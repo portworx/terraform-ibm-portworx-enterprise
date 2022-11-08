@@ -141,7 +141,7 @@ while [ "$RETRIES" -le "$LIMIT" ]; do
     S=$(kubectl get pods -l name=portworx -n ${NAMESPACE} -o custom-columns=":metadata.name,:status.phase,:spec.containers[0].image")
     printf "$DIVIDER*\t\t\t\tPods (${READY// /}/${DESIRED// /})\t\t\t\t*$DIVIDER$S$DIVIDER"
     if [ "${READY// /}" -eq "${DESIRED// /}" ]; then
-        printf "[SUCCESS] All Portworx Pods have been upgraded to version: ${IMAGE_VERSION}"
+        printf "[SUCCESS] All Portworx Pods have been upgraded to version: ${IMAGE_VERSION}\n"
         break
     fi
     ((RETRIES++))
