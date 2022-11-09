@@ -60,6 +60,12 @@ variable "pwx_plan" {
   }
 }
 
+variable "namespace" {
+  description = "Namespace to deploy Portworx Enterprise in the IKS"
+  type        = string
+  default     = "kube-system"
+}
+
 variable "secret_type" {
   description = "secret type"
   type        = string
@@ -86,7 +92,7 @@ variable "classic_infra" {
 
 variable "portworx_version" {
   type        = string
-  default     = "2.11.0"
+  default     = "2.11.4"
   description = "Image Version of Portworx Enterprise"
   validation {
     condition     = (tonumber(split(".", var.portworx_version)[0]) > 2) || (tonumber(split(".", var.portworx_version)[0]) == 2 && tonumber(split(".", var.portworx_version)[1]) >= 11)
@@ -107,13 +113,20 @@ variable "portworx_service_name" {
   nullable    = false
 }
 
-
+variable "delete_strategy" {
+  type        = string
+  description = "Delete Strategy to be used when uninstalling, use `Uninstall` or `UninstallAndWipe`"
+  default     = "Uninstall"
+  validation {
+    condition     = contains(["Uninstall", "UninstallAndWipe"], var.delete_strategy)
+    error_message = "The value of `delete_strategy` should be any of the following:\nUninstall\nUninstallAndWipe"
+  }
+}
 variable "tags" {
   type        = list(string)
   description = "Optional Tags to be add, if required."
   default     = []
 }
-
 
 variable "cloud_drive_options" {
   description = <<-_EOT

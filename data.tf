@@ -16,5 +16,6 @@ data "ibm_container_cluster" "cluster_classic" {
 
 
 locals {
-  cluster_ref = var.classic_infra ? data.ibm_container_cluster.cluster_classic[0] : data.ibm_container_vpc_cluster.cluster[0]
+  cluster_ref     = var.classic_infra ? data.ibm_container_cluster.cluster_classic[0] : data.ibm_container_vpc_cluster.cluster[0]
+  px_cluster_name = "portworx-cluster-${local.cluster_ref.id}"
 }
