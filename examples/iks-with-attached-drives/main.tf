@@ -21,4 +21,6 @@ module "portworx_enterprise" {
   portworx_csi          = var.portworx_csi
   portworx_service_name = var.portworx_service_name
   secret_type           = var.secret_type
+  delete_strategy       = var.delete_strategy
+  namespace             = var.namespace
 }

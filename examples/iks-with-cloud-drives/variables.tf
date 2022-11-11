@@ -37,7 +37,7 @@ variable "classic_infra" {
 
 variable "portworx_version" {
   type        = string
-  default     = "2.11.0"
+  default     = "2.11.4"
   description = "Image Version of Portworx Enterprise"
 }
 
@@ -112,4 +112,16 @@ variable "portworx_service_name" {
   type        = string
   description = "Name to be provided to the portworx cluster to be deployed"
   default     = "portworx-enterprise"
+}
+
+variable "delete_strategy" {
+  type        = string
+  description = "Delete Strategy to be used when uninstalling."
+  default     = "UninstallAndWipe"
+}
+
+variable "namespace" {
+  description = "Namespace to deploy Portworx Enterprise in the IKS"
+  type        = string
+  default     = "kube-system"
 }

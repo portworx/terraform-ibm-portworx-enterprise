@@ -1,11 +1,15 @@
 #!/bin/bash
-echo '**********************************************************************'
-echo '            Uninstalling Portworx Enterprise Installation'
-echo '**********************************************************************'
+
+NAMESPACE=$2
+DELETE_STRATEGY=$1
 # Current context
 echo "[INFO] Kube Config Path: $CONFIGPATH"
 export KUBECONFIG=$CONFIGPATH
 kubectl config current-context
+
+echo '**********************************************************************'
+echo '            Uninstalling Portworx Enterprise Installation'
+echo '**********************************************************************'
 
 CMD="helm"
 VERSION=$($CMD version | grep v3)
@@ -18,16 +22,18 @@ if [ "$VERSION" == "" ]; then
     $CMD version
 fi
 
-echo "[INFO] Uninstalling Portworx from Cluster..."
-wget "https://install.portworx.com/px-wipe" -O /tmp/px-wipe
-echo "[INFO] Trying to wipe entire Portworx Cluster.."
-bash /tmp/px-wipe -f
+$CMD repo add ibm-helm-portworx https://raw.githubusercontent.com/portworx/ibm-helm/master/repo/stable
+$CMD repo update
+$CMD upgrade portworx ibm-helm-portworx/portworx --reuse-values --set deleteStrategy.type=$DELETE_STRATEGY -n $NAMESPACE > /dev/null
+
+
 echo "[INFO] Listing releases ... "
-$CMD ls --namespace default --all
+$CMD ls -A
 echo "[INFO] Cleaning up portworx release..."
-$CMD delete portworx
+$CMD delete portworx -n $NAMESPACE
 if [[ $? -eq 0 ]]; then
     echo "[INFO] Successfully Un-Installed!!"
 else
     echo "[ERROR] Failed to Uninstall!!!"
+    exit 1
 fi
