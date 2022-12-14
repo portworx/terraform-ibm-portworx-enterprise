@@ -93,7 +93,7 @@ fi
 # Get helm binary over the internet, install helm v3.3.0
 # Trigger the helm upgrade
 printf "[INFO] Installing new Helm Charts...\n"
-$CMD repo add ibm-helm https://raw.githubusercontent.com/portworx/ibm-helm/master/repo/stable
+$CMD repo add ibm-helm-portworx https://raw.githubusercontent.com/portworx/ibm-helm/master/repo/stable
 $CMD repo update
 $CMD get values portworx -n ${CHART_NAMESPACE} > /tmp/values.yaml
 sed -i -E -e 's@PX_IMAGE=icr.io/ext/portworx/px-enterprise:.*$@PX_IMAGE=icr.io/ext/portworx/px-enterprise:'"$IMAGE_VERSION"'@g' /tmp/values.yaml

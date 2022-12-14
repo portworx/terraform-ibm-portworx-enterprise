@@ -22,9 +22,9 @@ if [ "$VERSION" == "" ]; then
     $CMD version
 fi
 
-$CMD repo add ibm-helm https://raw.githubusercontent.com/portworx/ibm-helm/master/repo/stable
+$CMD repo add ibm-helm-portworx https://raw.githubusercontent.com/portworx/ibm-helm/master/repo/stable
 $CMD repo update
-$CMD upgrade portworx ibm-helm/portworx --reuse-values --set deleteStrategy.type=$DELETE_STRATEGY -n $NAMESPACE > /dev/null
+$CMD upgrade portworx ibm-helm-portworx/portworx --reuse-values --set deleteStrategy.type=$DELETE_STRATEGY -n $NAMESPACE > /dev/null
 
 
 echo "[INFO] Listing releases ... "
