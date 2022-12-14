@@ -6,6 +6,7 @@ module "portworx_enterprise" {
 
   # IKS Cluster Configuration
   cluster_name   = var.iks_cluster_name
+  px_cluster_name   = var.px_cluster_name
   resource_group = var.resource_group
   classic_infra  = var.classic_infra
 
@@ -25,6 +26,7 @@ module "portworx_enterprise" {
   secret_type           = var.secret_type
   delete_strategy       = var.delete_strategy
   namespace             = var.namespace
+  install_autopilot = var.install_autopilot
 
   # Cloud Drives Configuration
   use_cloud_drives = var.use_cloud_drives

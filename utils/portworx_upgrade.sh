@@ -45,8 +45,10 @@ if [ "$VERSION" == "" ]; then
     CMD="/tmp/helm3/linux-amd64/helm"
     $CMD version
 fi
+# Get the portworx chart namespace
+CHART_NAMESPACE=$(helm ls -A | grep portworx | awk '{print $2}')
 # Get the Helm status
-if ! JSON=$(helm history portworx -n ${NAMESPACE} -o json | jq '. | last'); then
+if ! JSON=$(helm history portworx -n ${CHART_NAMESPACE} -o json | jq '. | last'); then
     printf "[ERROR] Helm couldn't find Portworx Installation, will not proceed with the upgrade!! Please install portworx and then try to upgrade.\n"
     exit 1
 else
@@ -93,9 +95,9 @@ fi
 printf "[INFO] Installing new Helm Charts...\n"
 $CMD repo add ibm-helm https://raw.githubusercontent.com/portworx/ibm-helm/master/repo/stable
 $CMD repo update
-$CMD get values portworx -n ${NAMESPACE} > /tmp/values.yaml
+$CMD get values portworx -n ${CHART_NAMESPACE} > /tmp/values.yaml
 sed -i -E -e 's@PX_IMAGE=icr.io/ext/portworx/px-enterprise:.*$@PX_IMAGE=icr.io/ext/portworx/px-enterprise:'"$IMAGE_VERSION"'@g' /tmp/values.yaml
-$CMD upgrade portworx ibm-helm/portworx -f /tmp/values.yaml --set imageVersion=$IMAGE_VERSION -n ${NAMESPACE}
+$CMD upgrade portworx ibm-helm/portworx -f /tmp/values.yaml --set imageVersion=$IMAGE_VERSION -n ${CHART_NAMESPACE}
 
 if [[ $? -eq 0 ]]; then
     echo "[INFO] Upgrade Triggered Succesfully, will monitor the storage cluster!!"

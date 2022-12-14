@@ -11,6 +11,11 @@ variable "cluster_name" {
   nullable    = false
 }
 
+variable "px_cluster_name" {
+  description = "Name of existing portworx cluster"
+  type        = string
+  nullable    = false
+}
 variable "resource_group" {
   description = "Resource group of existing IKS Cluster "
   type        = string
@@ -37,7 +42,7 @@ variable "etcd_options" {
     external_etcd_connection_url = null
   }
   validation {
-    condition     = (var.etcd_options.use_external_etcd && (var.etcd_options.external_etcd_connection_url != null) && (var.etcd_options.etcd_secret_name != null)) || (!var.etcd_options.use_external_etcd && (var.etcd_options.external_etcd_connection_url == null) && (var.etcd_options.etcd_secret_name == null))
+    condition     = (var.etcd_options.use_external_etcd && (var.etcd_options.external_etcd_connection_url != null) && (var.etcd_options.etcd_secret_name != null)) || (!var.etcd_options.use_external_etcd && (((var.etcd_options.external_etcd_connection_url == null) && (var.etcd_options.etcd_secret_name == null)) || (var.etcd_options.external_etcd_connection_url == "") && (var.etcd_options.etcd_secret_name == "")))
     error_message = "The value of `etcd_secret_name` and `external_etcd_connection_url` should be set when `use_external_etcd` is set to `true`"
   }
 }
@@ -163,4 +168,16 @@ variable "cloud_drive_options" {
     ])
     error_message = "The value of `storage_classes` should be a list of strings\nAvailable Options: ibmc-vpc-block-10iops-tier\nibmc-vpc-block-5iops-tier\nibmc-vpc-block-general-purpose\nibmc-vpc-block-retain-10iops-tier\nibmc-vpc-block-retain-5iops-tier\nibmc-vpc-block-retain-general-purpose"
   }
+}
+
+variable "install_autopilot" {
+  description = "install portworx autopilot"
+  type        = bool
+  default     = false
+}
+
+variable "prometheus_url" {
+  description = "Prometheus URL required for portworx autopilot. defaults to http://prometheus:9091"
+  type        = string
+  default     = "http://prometheus:9091"
 }
