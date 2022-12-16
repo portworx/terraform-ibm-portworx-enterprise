@@ -1,0 +1,103 @@
+#!/bin/bash
+
+# Check if portworx helm charts are installed and the chart status
+# helm history portworx (Find the status etc)
+
+# if installed, then configure the max storage node per zone
+
+# Wait for the pods to be restarted
+function version { printf "$@" | awk -F. '{ printf("%d%03d%03d%03d\n", $1,$2,$3,$4); }'; }
+
+NAMESPACE=$1
+PX_CLUSTER_NAME=$2
+PROMETHEUS_URL=$3
+SLEEP_TIME=30
+
+DIVIDER="\n*************************************************************************\n"
+HEADER="$DIVIDER*\t\tConfigure Requested to Portworx Enterprise ${IMAGE_VERSION}\t\t*$DIVIDER"
+
+DESIRED=0
+READY=0
+JSON=0
+
+# Check the Helm Chart Summary
+printf "[INFO] Kube Config Path: $CONFIGPATH"
+export KUBECONFIG=$CONFIGPATH
+kubectl config current-context
+
+CMD="helm"
+VERSION=$($CMD version | grep v3)
+if [ "$VERSION" == "" ]; then
+    printf "[WARN] Helm v3 is not installed, migrating to v3.3.0..."
+    mkdir /tmp/helm3
+    wget https://get.helm.sh/helm-v3.3.0-linux-amd64.tar.gz -O /tmp/helm3/helm-v3.3.0-linux-amd64.tar.gz
+    tar -xzf /tmp/helm3/helm-v3.3.0-linux-amd64.tar.gz -C /tmp/helm3/
+    CMD="/tmp/helm3/linux-amd64/helm"
+    $CMD version
+fi
+# Get the Helm status
+if ! JSON=$(helm history portworx -n ${NAMESPACE} -o json | jq '. | last'); then
+    printf "[ERROR] Helm couldn't find Portworx Installation, will not proceed with the upgrade!! Please install portworx and then try to upgrade.\n"
+    exit 1
+else
+    printf "$HEADER*\t\t\t\tHelm Chart Summary\t\t\t*$DIVIDER\n$JSON$DIVIDER"
+fi
+
+# Check if portworx ds is there, if there,  get the ds details else, exit with error
+# Store the number of desired and ready pods
+# Show the current pods and ds status
+printf "[INFO] Validating Portworx Cluster Status...\n"
+if ! sc_state=$(kubectl get storagecluster ${PX_CLUSTER_NAME} -n ${NAMESPACE}); then
+    printf "[ERROR] Portworx Storage Cluster Not Found, will not proceed with the upgrade!! Please install Portworx Enterprise and then try to upgrade.\n"
+    exit 1
+else
+    STATUS=$(kubectl get storagecluster ${PX_CLUSTER_NAME} -n ${NAMESPACE} -o jsonpath='{.status.phase}')
+    if [ "$STATUS" != "Online" ]; then
+        printf "[ERROR] Portworx Storage Cluster is not Online. Cluster Status: ($STATUS), will not proceed with the upgrade!!\n"
+        exit 1
+    else
+        state=$(kubectl get storagecluster ${PX_CLUSTER_NAME} -n ${NAMESPACE} -o jsonpath='{.status}' | jq)
+        printf "[CHECK PASSED] Portworx Storage Cluster is Online.\n$state\n"
+    fi
+fi
+
+
+
+# Configure kubeconfig
+# Get helm binary over the internet, install helm v3.3.0
+# Trigger the helm upgrade
+
+AUTOPILOT_SPEC=/tmp/autopilot.yaml
+printf "[INFO] get autopilot yaml"
+curl  "https://install.portworx.com/?comp=autopilot" > $AUTOPILOT_SPEC
+printf "[INFO] setting up prometheus url\n"
+PROMETHEUS_URL=http://prometheus:9091
+PROMETHEUS_URL_LINE_NO=$(grep -n 'http://prometheus:9090' ${AUTOPILOT_SPEC} | cut -d ':' -f1)
+if [ "$PROMETHEUS_URL_LINE_NO" != "" ]; then
+    PROMETHEUS_URL_LINE=$(grep 'http://prometheus:9090' ${AUTOPILOT_SPEC})
+    REPLACED_LINE=${PROMETHEUS_URL_LINE//http\:\/\/prometheus:9090/$PROMETHEUS_URL}
+    REPLACED_LINE=${REPLACED_LINE//\//\\\/}
+    REPLACED_LINE=${REPLACED_LINE//\:/\\\:}
+    FIND_AND_REPLACE="${PROMETHEUS_URL_LINE_NO}s/.*/${REPLACED_LINE}/"
+    sed -i -e "${FIND_AND_REPLACE}" $AUTOPILOT_SPEC
+fi
+printf "[INFO] setting up icr.io\n"
+ICR_URL="image: icr.io/ext/portworx/autopilot:"
+ICR_URL_LINE_NO=$(grep -n 'image: portworx/autopilot:' ${AUTOPILOT_SPEC} | cut -d ':' -f1)
+if [ "$ICR_URL_LINE_NO" != "" ]; then
+    ICR_URL_LINE=$(grep 'image: portworx/autopilot:' ${AUTOPILOT_SPEC})
+    REPLACED_LINE=${ICR_URL_LINE//image\: portworx\/autopilot\:/$ICR_URL}
+    REPLACED_LINE=${REPLACED_LINE//\//\\\/}
+    REPLACED_LINE=${REPLACED_LINE//\:/\\\:}
+    FIND_AND_REPLACE="${ICR_URL_LINE_NO}s/.*/${REPLACED_LINE}/"
+    sed -i -e "${FIND_AND_REPLACE}" $AUTOPILOT_SPEC
+fi
+printf "[INFO] apply autopilot yaml\n"
+kubectl -n $NAMESPACE apply -f $AUTOPILOT_SPEC
+
+if [[ $? -eq 0 ]]; then
+    printf "[INFO] Autopilot will be up and running in a while!!\n"
+else
+    printf "[ERROR] Failed to install autopilot!!\n"
+    exit 1
+fi

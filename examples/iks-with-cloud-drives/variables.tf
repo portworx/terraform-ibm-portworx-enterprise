@@ -10,7 +10,11 @@ variable "iks_cluster_name" {
   type        = string
   nullable    = false
 }
-
+variable "px_cluster_name" {
+  description = "Name of existing portworx cluster"
+  type        = string
+  nullable    = false
+}
 variable "resource_group" {
   description = "Resource group of existing IKS Cluster "
   type        = string
@@ -124,4 +128,10 @@ variable "namespace" {
   description = "Namespace to deploy Portworx Enterprise in the IKS"
   type        = string
   default     = "kube-system"
+}
+
+variable "install_autopilot" {
+  description = "install portworx autopilot"
+  type        = bool
+  default     = false
 }

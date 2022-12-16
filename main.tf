@@ -31,7 +31,7 @@ resource "ibm_resource_instance" "portworx" {
     secret_type               = var.secret_type
     csi                       = var.portworx_csi ? "True" : "False"
     cloud_drive               = var.use_cloud_drives ? "Yes" : "No"
-    max_storage_node_per_zone = var.cloud_drive_options.max_storage_node_per_zone
+    max_storage_node_per_zone = 1
     num_cloud_drives          = var.cloud_drive_options.num_cloud_drives
     size                      = (var.cloud_drive_options.num_cloud_drives >= 1) ? element(var.cloud_drive_options.cloud_drives_sizes, 0) : 0
     size2                     = (var.cloud_drive_options.num_cloud_drives >= 2) ? element(var.cloud_drive_options.cloud_drives_sizes, 1) : 0
@@ -57,9 +57,24 @@ resource "ibm_resource_instance" "portworx" {
   ]
 }
 
+resource "null_resource" "portworx_configure_max_storage_node_per_zone" {
+  triggers = {
+    max_storage_node_per_zone = var.cloud_drive_options.max_storage_node_per_zone
+  }
+  provisioner "local-exec" {
+    working_dir = "${path.module}/utils/"
+    command     = "/bin/bash portworx_configure_max_storage_node_per_zone.sh ${self.triggers.max_storage_node_per_zone} ${local.px_cluster_name} ${var.namespace}"
+    on_failure  = fail
+  }
+
+  depends_on = [
+    ibm_resource_instance.portworx
+  ]
+}
+
 resource "null_resource" "portworx_upgrade" {
   triggers = {
-    condition = timestamp()
+    condition = var.upgrade_portworx
   }
   provisioner "local-exec" {
     working_dir = "${path.module}/utils/"
@@ -67,6 +82,7 @@ resource "null_resource" "portworx_upgrade" {
     on_failure  = fail
   }
 }
+
 
 resource "null_resource" "portworx_destroy" {
   triggers = {
