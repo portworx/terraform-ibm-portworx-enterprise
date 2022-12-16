@@ -41,7 +41,7 @@ fi
 CHART_NAMESPACE=$(helm ls -A | grep portworx | awk '{print $2}')
 # Get the Helm status
 if ! JSON=$(helm history portworx -n ${CHART_NAMESPACE} -o json | jq '. | last'); then
-    printf "[ERROR] Helm couldn't find Portworx Installation, will not proceed with the upgrade!! Please install portworx and then try to upgrade.\n"
+    printf "[ERROR] Helm couldn't find Portworx Installation, will not proceed with the configuration!! Please install portworx and then try to configure.\n"
     exit 1
 else
     printf "$HEADER*\t\t\t\tHelm Chart Summary\t\t\t*$DIVIDER\n$JSON$DIVIDER"
@@ -69,12 +69,12 @@ done
 # Show the current pods and ds status
 printf "[INFO] Validating Portworx Cluster Status...\n"
 if ! sc_state=$(kubectl get storagecluster ${PX_CLUSTER_NAME} -n ${NAMESPACE}); then
-    printf "[ERROR] Portworx Storage Cluster Not Found, will not proceed with the upgrade!! Please install Portworx Enterprise and then try to upgrade.\n"
+    printf "[ERROR] Helm couldn't find Portworx Installation, will not proceed with configuring max storage nodes per zone!!\n"
     exit 1
 else
     STATUS=$(kubectl get storagecluster ${PX_CLUSTER_NAME} -n ${NAMESPACE} -o jsonpath='{.status.phase}')
     if [ "$STATUS" != "Online" ]; then
-        printf "[ERROR] Portworx Storage Cluster is not Online. Cluster Status: ($STATUS), will not proceed with the upgrade!!\n"
+        printf "[ERROR] Portworx Storage Cluster is not Online. Cluster Status: ($STATUS), will not proceed with configuration!!\n"
         exit 1
     else
         state=$(kubectl get storagecluster ${PX_CLUSTER_NAME} -n ${NAMESPACE} -o jsonpath='{.status}' | jq)
