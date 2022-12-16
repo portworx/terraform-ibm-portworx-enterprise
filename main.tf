@@ -83,20 +83,6 @@ resource "null_resource" "portworx_upgrade" {
   }
 }
 
-resource "null_resource" "portworx_install_autopilot" {
-  triggers = {
-    condition = var.install_autopilot
-  }
-  provisioner "local-exec" {
-    working_dir = "${path.module}/utils/"
-    command     = "/bin/bash portworx_install_autopilot.sh ${var.namespace} ${local.px_cluster_name} ${var.prometheus_url}"
-    on_failure  = fail
-  }
-
-  depends_on = [
-    ibm_resource_instance.portworx
-  ]
-}
 
 resource "null_resource" "portworx_destroy" {
   triggers = {
