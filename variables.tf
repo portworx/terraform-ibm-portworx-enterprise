@@ -176,6 +176,24 @@ variable "install_autopilot" {
   default     = false
 }
 
+variable "autopilot_scale_percentage_threshold" {
+  description = "Will trigger the autoscaling action when the available capacity is less than threshold"
+  type        = number
+  default     = 50
+}
+
+variable "autopilot_scale_percentage" {
+  description = "Increase storage capacity by percent when it hits the threshold"
+  type        = number
+  default     = 50
+}
+
+variable "autopilot_max_capacity" {
+  description = "Maximum capacity in GB autopilot autoscale rule"
+  type        = number
+  default     = 2000
+}
+
 variable "prometheus_url" {
   description = "Prometheus URL required for portworx autopilot. defaults to http://prometheus:9091"
   type        = string
