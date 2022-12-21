@@ -27,6 +27,9 @@ module "portworx_enterprise" {
   delete_strategy       = var.delete_strategy
   namespace             = var.namespace
   install_autopilot = var.install_autopilot
+  autopilot_scale_percentage_threshold = var.autopilot_scale_percentage_threshold
+  autopilot_scale_percentage = var.autopilot_scale_percentage
+  autopilot_max_capacity = var.autopilot_max_capacity
 
   # Cloud Drives Configuration
   use_cloud_drives = var.use_cloud_drives
