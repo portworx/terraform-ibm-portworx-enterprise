@@ -37,8 +37,9 @@ if [ "$VERSION" == "" ]; then
     CMD="/tmp/helm3/linux-amd64/helm"
     $CMD version
 fi
+
 # Get the Helm status
-if ! JSON=$(helm history portworx -n ${NAMESPACE} -o json | jq '. | last'); then
+if ! JSON=$($CMD history portworx -n ${NAMESPACE} -o json | jq '. | last'); then
     printf "[ERROR] Helm couldn't find Portworx Installation, will not proceed with the upgrade!! Please install portworx and then try to upgrade.\n"
     exit 1
 else
