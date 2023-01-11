@@ -40,10 +40,10 @@ if [ "$VERSION" == "" ]; then
 fi
 
 # Get the portworx chart namespace
-CHART_NAMESPACE=$(helm ls -A | grep portworx | awk '{print $2}')
+CHART_NAMESPACE=$($CMD ls -A | grep portworx | awk '{print $2}')
 echo "[INFO] Chart namespace is $CHART_NAMESPACE"
 # Get the Helm status
-if ! JSON=$(helm history portworx -n ${CHART_NAMESPACE} -o json | jq '. | last'); then
+if ! JSON=$($CMD history portworx -n ${CHART_NAMESPACE} -o json | jq '. | last'); then
     printf "[ERROR] Helm couldn't find Portworx Installation, will not proceed with the configuration!! Please install portworx and then try to configure.\n"
     exit 1
 else
