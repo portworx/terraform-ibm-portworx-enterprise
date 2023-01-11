@@ -42,7 +42,7 @@ VERSION=$(helm version --short 2>/dev/null | grep 'v3\.' | grep -v 'v3\.0\.' | g
 if [ "$VERSION" == "" ]; then
     printf "[WARN] Helm v3 is not installed, migrating to $HELM_VER..."
     mkdir /tmp/helm3
-    wget https://get.helm.sh/helm-${HELM_VER}-linux-amd64.tar.gz -O /tmp/helm3/helm-${HELM_VER}-linux-amd64.tar.gz
+    wget https://get.helm.sh/helm-${HELM_VER}-linux-amd64.tar.gz -O /tmp/helm3/helm-${HELM_VER}-linux-amd64.tar.gz -q
     tar -xzf /tmp/helm3/helm-${HELM_VER}-linux-amd64.tar.gz -C /tmp/helm3/
     CMD="/tmp/helm3/linux-amd64/helm"
     $CMD version
