@@ -41,6 +41,7 @@ fi
 
 # Get the portworx chart namespace
 CHART_NAMESPACE=$(helm ls -A | grep portworx | awk '{print $2}')
+echo "[INFO] Chart namespace is $CHART_NAMESPACE"
 # Get the Helm status
 if ! JSON=$(helm history portworx -n ${CHART_NAMESPACE} -o json | jq '. | last'); then
     printf "[ERROR] Helm couldn't find Portworx Installation, will not proceed with the configuration!! Please install portworx and then try to configure.\n"
@@ -127,7 +128,7 @@ if [ "$ADVOPT_LINE_NO" != "" ]; then
 fi
 echo "maxStorageNodesPerZone: ${NODE_COUNT}" >> $HELM_VALUES_FILE
 printf "[INFO] maxStorageNodesPerZone value updated in ${HELM_VALUES_FILE}!!\n"
-printf "[INFO] Upgrading ${HELM_VALUES_FILE}!!\n"
+printf "[INFO] Upgrading ${HELM_VALUES_FILE} in ${CHART_NAMESPACE} namespace!!\n"
 $CMD upgrade portworx ibm-helm/portworx -f ${HELM_VALUES_FILE} -n ${CHART_NAMESPACE}
 
 if [[ $? -eq 0 ]]; then
