@@ -27,20 +27,23 @@ export KUBECONFIG=$CONFIGPATH
 kubectl config current-context
 
 CMD="helm"
-VERSION=$($CMD version | grep v3)
+HELM_VER="v3.10.3"
+# Command is empty for v2 (--short fails) and also empty for v3 before v3.4 (where --force-update was introduced)
+VERSION=$(helm version --short 2>/dev/null | grep 'v3\.' | grep -v 'v3\.0\.' | grep -v 'v3\.1\.' | grep -v 'v3\.2\.' | grep -v 'v3\.3\.')
 if [ "$VERSION" == "" ]; then
-    printf "[WARN] Helm v3 is not installed, migrating to v3.3.0..."
+    printf "[WARN] Helm v3 is not installed, migrating to $HELM_VER..."
     mkdir /tmp/helm3
-    wget https://get.helm.sh/helm-v3.3.0-linux-amd64.tar.gz -O /tmp/helm3/helm-v3.3.0-linux-amd64.tar.gz
-    tar -xzf /tmp/helm3/helm-v3.3.0-linux-amd64.tar.gz -C /tmp/helm3/
+    wget https://get.helm.sh/helm-${HELM_VER}-linux-amd64.tar.gz -O /tmp/helm3/helm-${HELM_VER}-linux-amd64.tar.gz -q
+    tar -xzf /tmp/helm3/helm-${HELM_VER}-linux-amd64.tar.gz -C /tmp/helm3/
     CMD="/tmp/helm3/linux-amd64/helm"
     $CMD version
 fi
 
 # Get the portworx chart namespace
-CHART_NAMESPACE=$(helm ls -A | grep portworx | awk '{print $2}')
+CHART_NAMESPACE=$($CMD ls -A | grep portworx | awk '{print $2}')
+echo "[INFO] Chart namespace is $CHART_NAMESPACE"
 # Get the Helm status
-if ! JSON=$(helm history portworx -n ${CHART_NAMESPACE} -o json | jq '. | last'); then
+if ! JSON=$($CMD history portworx -n ${CHART_NAMESPACE} -o json | jq '. | last'); then
     printf "[ERROR] Helm couldn't find Portworx Installation, will not proceed with the configuration!! Please install portworx and then try to configure.\n"
     exit 1
 else
@@ -125,7 +128,7 @@ if [ "$ADVOPT_LINE_NO" != "" ]; then
 fi
 echo "maxStorageNodesPerZone: ${NODE_COUNT}" >> $HELM_VALUES_FILE
 printf "[INFO] maxStorageNodesPerZone value updated in ${HELM_VALUES_FILE}!!\n"
-printf "[INFO] Upgrading ${HELM_VALUES_FILE}!!\n"
+printf "[INFO] Upgrading ${HELM_VALUES_FILE} in ${CHART_NAMESPACE} namespace!!\n"
 $CMD upgrade portworx ibm-helm/portworx -f ${HELM_VALUES_FILE} -n ${CHART_NAMESPACE}
 
 if [[ $? -eq 0 ]]; then
