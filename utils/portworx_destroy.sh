@@ -26,6 +26,15 @@ $CMD repo add ibm-helm-portworx https://raw.githubusercontent.com/portworx/ibm-h
 $CMD repo update
 $CMD upgrade portworx ibm-helm-portworx/portworx --reuse-values --set deleteStrategy.type=$DELETE_STRATEGY -n $NAMESPACE > /dev/null
 
+AUTOPILOT_SPEC=/tmp/autopilot.yaml
+printf "[INFO] get autopilot yaml"
+curl  "https://install.portworx.com/?comp=autopilot" > $AUTOPILOT_SPEC
+kubectl -n $NAMESPACE delete -f $AUTOPILOT_SPEC
+if [[ $? -eq 0 ]]; then
+    echo "[INFO] Successfully Un-Installed Autopilot!!"
+else
+    echo "[ERROR] Failed to Uninstall Autopilot!!! You can clean it manually by executing kubectl -n $NAMESPACE delete deployments autopilot"
+fi
 
 echo "[INFO] Listing releases ... "
 $CMD ls -A
