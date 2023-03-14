@@ -1,3 +1,33 @@
 iks_cluster_name = "your_cluster_name"
 ibmcloud_api_key = "your_secret_api_key"
 resource_group = "iks_resource_group"
+px_cluster_name = "your_portworx_cluster_name"
+prometheus_url = "prometheus url to use, defaults to http://prometheus:9090"
+region = "cluster region"
+pwx_plan = "px-enterprise"
+
+portworx_service_name = "your_portworx_service_name"
+portworx_version = "portworx version to use e.g.: 2.11.4"
+namespace = "portworx namespace"
+cloud_drives_sizes = [100]
+num_cloud_drives = 1
+max_storage_node_per_zone = 2
+use_cloud_drives = true
+storage_classes = ["ibmc-vpc-block-10iops-tier"]
+
+classic_infra = false
+upgrade_portworx = false
+
+# etcd_options
+use_external_etcd = true
+etcd_secret_name = "etcd"
+external_etcd_connection_url = "etcd:https://localhost.com"
+secret_type = ""
+portworx_csi = false
+
+delete_strategy = "Uninstall"
+
+install_autopilot = true
+autopilot_scale_percentage_threshold=50
+autopilot_scale_percentage=50
+autopilot_max_capacity=2000

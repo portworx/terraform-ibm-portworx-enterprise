@@ -11,6 +11,9 @@ function version { printf "$@" | awk -F. '{ printf("%d%03d%03d%03d\n", $1,$2,$3,
 NAMESPACE=$1
 PX_CLUSTER_NAME=$2
 PROMETHEUS_URL=$3
+SCALE_PERCENTAGE_THRESHOLD=$4
+SCALE_PERCENTAGE=$5
+MAX_CAPACITY=$6
 SLEEP_TIME=30
 
 DIVIDER="\n*************************************************************************\n"
@@ -104,3 +107,41 @@ else
     printf "[ERROR] Failed to install autopilot!!\n"
     exit 1
 fi
+
+printf "[INFO] Inflating default autopilot rule\n"
+
+AUTOEXPAND_RULE="apiVersion: autopilot.libopenstorage.org/v1alpha1
+kind: AutopilotRule
+metadata:
+  name: pool-expand
+spec:
+  enforcement: required
+  ##### conditions are the symptoms to evaluate. All conditions are AND'ed
+  conditions:
+    expressions:
+    # pool available capacity less than the percentage
+    - key: \"100 * ( px_pool_stats_available_bytes/ px_pool_stats_total_bytes)\"
+      operator: Lt
+      values:
+        - \"${SCALE_PERCENTAGE_THRESHOLD}\"
+    # pool total capacity should not exceed limit
+    - key: \"px_pool_stats_total_bytes/(1024*1024*1024)\"
+      operator: Lt
+      values:
+       - \"${MAX_CAPACITY}\"
+  ##### action to perform when condition is true
+  actions:
+    - name: \"openstorage.io.action.storagepool/expand\"
+      params:
+        # resize pool by scalepercentage of current size
+        scalepercentage: \"${SCALE_PERCENTAGE}\"
+        # when scaling, add disks to the pool
+        scaletype: \"add-disk\"
+"
+
+printf "$AUTOEXPAND_RULE" > /tmp/autoexpand.yml
+
+
+printf "[INFO] Applying default autopilot rule\n"
+kubectl -n $NAMESPACE apply -f /tmp/autoexpand.yml
+printf "[INFO] Default autopilot rule applied\n"
