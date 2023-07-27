@@ -11,7 +11,7 @@ sleep 90
 
 while [ "$RETRIES" -le "$LIMIT" ]; do
   STATUS=$(kubectl get storagecluster ${PX_CLUSTER_NAME} -n ${NAMESPACE} -o yaml | grep phase | cut -d ":" -f2)
-  if [ "${STATUS// /}" == "Online" ] || "${STATUS// /}" == "Running" ]; then
+  if [ "${STATUS// /}" == "Online" ] || [ "${STATUS// /}" == "Running" ]; then
     CLUSTER_ID=$(kubectl get storagecluster ${PX_CLUSTER_NAME} -n ${NAMESPACE} -o yaml | grep clusterUid | cut -d ":" -f2)
     printf "[SUCCESS] Portworx Storage Cluster is Online. Cluster ID: (${CLUSTER_ID// /})\n"
     break
