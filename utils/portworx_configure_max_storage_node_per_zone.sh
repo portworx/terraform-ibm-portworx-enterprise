@@ -76,7 +76,7 @@ if ! sc_state=$(kubectl get storagecluster ${PX_CLUSTER_NAME} -n ${NAMESPACE}); 
     exit 1
 else
     STATUS=$(kubectl get storagecluster ${PX_CLUSTER_NAME} -n ${NAMESPACE} -o jsonpath='{.status.phase}')
-    if [ "$STATUS" != "Online" ]; then
+    if [ "$STATUS" != "Online" ] || [ "$STATUS" != "Running" ]; then
         printf "[ERROR] Portworx Storage Cluster is not Online. Cluster Status: ($STATUS), will not proceed with configuration!!\n"
         exit 1
     else
