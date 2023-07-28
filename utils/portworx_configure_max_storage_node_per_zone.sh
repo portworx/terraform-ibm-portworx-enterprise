@@ -53,8 +53,7 @@ fi
 LIMIT=20
 RETRIES=0
 sleep $SLEEP_TIME
-while [ "$RETRIES" -le "$LIMIT" ]
-do
+while [ "$RETRIES" -le "$LIMIT" ]; do
     GREP_NS=$(kubectl get ns | grep $NAMESPACE | awk '{print $1}')
     if [ "$NAMESPACE" == "$GREP_NS" ]; then
         printf "[INFO] namespace found \n"
@@ -85,8 +84,6 @@ else
     fi
 fi
 
-
-
 # Configure kubeconfig
 # Get helm binary over the internet, install helm v3.3.0
 # Trigger the helm upgrade
@@ -96,7 +93,7 @@ HELM_VALUES_FILE=/tmp/values.yaml
 printf "[INFO] Installing new Helm Charts...\n"
 $CMD repo add ibm-helm https://raw.githubusercontent.com/portworx/ibm-helm/master/repo/stable --force-update
 $CMD repo update
-$CMD get values portworx -n ${CHART_NAMESPACE} > $HELM_VALUES_FILE
+$CMD get values portworx -n ${CHART_NAMESPACE} >$HELM_VALUES_FILE
 ADVOPT_LINE_NO=$(grep -n 'advOpts' ${HELM_VALUES_FILE} | cut -d ':' -f1)
 if [ "$ADVOPT_LINE_NO" != "" ]; then
     ADVOPT_LINE=$(grep 'advOpts' ${HELM_VALUES_FILE})
@@ -126,7 +123,7 @@ if [ "$ADVOPT_LINE_NO" != "" ]; then
     FIND_AND_REPLACE="${ADVOPT_LINE_NO}s/.*//"
     sed -i -e ${FIND_AND_REPLACE} ${HELM_VALUES_FILE}
 fi
-echo "maxStorageNodesPerZone: ${NODE_COUNT}" >> $HELM_VALUES_FILE
+echo "maxStorageNodesPerZone: ${NODE_COUNT}" >>$HELM_VALUES_FILE
 printf "[INFO] maxStorageNodesPerZone value updated in ${HELM_VALUES_FILE}!!\n"
 printf "[INFO] Upgrading ${HELM_VALUES_FILE} in ${CHART_NAMESPACE} namespace!!\n"
 $CMD upgrade portworx ibm-helm/portworx -f ${HELM_VALUES_FILE} -n ${CHART_NAMESPACE}
@@ -143,9 +140,8 @@ LIMIT=20
 RETRIES=0
 sleep $SLEEP_TIME
 UPDATED_COUNT="maxStorageNodesPerZone: ${NODE_COUNT}"
-while [ "$RETRIES" -le "$LIMIT" ]
-do
-    $CMD get values portworx -n ${CHART_NAMESPACE} > ${HELM_VALUES_FILE}
+while [ "$RETRIES" -le "$LIMIT" ]; do
+    $CMD get values portworx -n ${CHART_NAMESPACE} >${HELM_VALUES_FILE}
     UPDATED_VAL=$(grep maxStorageNodesPerZone ${HELM_VALUES_FILE})
     printf "compare ${UPDATED_VAL} == ${UPDATED_COUNT}\n"
     if [ "$UPDATED_VAL" == "$UPDATED_COUNT" ]; then
