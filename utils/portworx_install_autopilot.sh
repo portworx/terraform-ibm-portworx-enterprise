@@ -58,12 +58,13 @@ if ! sc_state=$(kubectl get storagecluster ${PX_CLUSTER_NAME} -n ${NAMESPACE}); 
     exit 1
 else
     STATUS=$(kubectl get storagecluster ${PX_CLUSTER_NAME} -n ${NAMESPACE} -o jsonpath='{.status.phase}')
-    if [ "$STATUS" != "Online" ] || [ "$STATUS" != "Running" ]; then
-        printf "[ERROR] Portworx Storage Cluster is not Online. Cluster Status: ($STATUS), will not proceed with the upgrade!!\n"
-        exit 1
-    else
+    if [ "$STATUS" == "Online" ] || [ "$STATUS" == "Running" ]; then
         state=$(kubectl get storagecluster ${PX_CLUSTER_NAME} -n ${NAMESPACE} -o jsonpath='{.status}' | jq)
         printf "[CHECK PASSED] Portworx Storage Cluster is Online.\n$state\n"
+    else
+        printf "[ERROR] Portworx Storage Cluster is not Online. Cluster Status: ($STATUS), will not proceed with the upgrade!!\n"
+        exit 1
+
     fi
 fi
 
