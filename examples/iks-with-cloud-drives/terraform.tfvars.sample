@@ -7,7 +7,7 @@ region = "cluster region"
 pwx_plan = "px-enterprise"
 
 portworx_service_name = "your_portworx_service_name"
-portworx_version = "portworx version to use e.g.: 2.11.4"
+portworx_version = "portworx version to use e.g.: 3.2.1.2"
 namespace = "portworx namespace"
 cloud_drives_sizes = [100]
 num_cloud_drives = 1
@@ -23,7 +23,7 @@ use_external_etcd = true
 etcd_secret_name = "etcd"
 external_etcd_connection_url = "etcd:https://localhost.com"
 secret_type = ""
-portworx_csi = false
+portworx_csi = true
 
 delete_strategy = "Uninstall"
 
