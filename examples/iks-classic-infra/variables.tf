@@ -37,7 +37,7 @@ variable "classic_infra" {
 
 variable "portworx_version" {
   type        = string
-  default     = "2.11.0"
+  default     = "3.2.1.2"
   description = "Image Version of Portworx Enterprise"
 }
 
@@ -80,7 +80,7 @@ variable "secret_type" {
 variable "portworx_csi" {
   type        = bool
   description = "Enable CSI, `true` or `false`"
-  default     = false
+  default     = true
 }
 
 variable "portworx_service_name" {
