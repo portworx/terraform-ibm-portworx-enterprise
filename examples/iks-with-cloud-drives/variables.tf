@@ -84,7 +84,7 @@ variable "secret_type" {
 
 variable "max_storage_node_per_zone" {
   type        = number
-  description = "Maximum number of strorage nodes per zone"
+  description = "Maximum number of storage nodes per zone"
   default     = 1
 }
 
