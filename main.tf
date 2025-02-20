@@ -31,7 +31,7 @@ resource "ibm_resource_instance" "portworx" {
     secret_type               = var.secret_type
     csi                       = var.portworx_csi ? "True" : "False"
     cloud_drive               = var.use_cloud_drives ? "Yes" : "No"
-    max_storage_node_per_zone = 1
+    max_storage_node_per_zone = var.cloud_drive_options.max_storage_node_per_zone
     num_cloud_drives          = var.cloud_drive_options.num_cloud_drives
     size                      = (var.cloud_drive_options.num_cloud_drives >= 1) ? element(var.cloud_drive_options.cloud_drives_sizes, 0) : 0
     size2                     = (var.cloud_drive_options.num_cloud_drives >= 2) ? element(var.cloud_drive_options.cloud_drives_sizes, 1) : 0
