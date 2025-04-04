@@ -21,8 +21,7 @@ HEADER="$DIVIDER*\t\tUpgrade Requested to Portworx Enterprise ${IMAGE_VERSION}\t
 DESIRED=0
 READY=0
 JSON=0
-if $UPGRADE_REQUESTED
-then
+if $UPGRADE_REQUESTED; then
     printf "Upgrade Requested, Setting up Environment!!\n"
 else
     printf "No Upgrade Requested!!\n"
@@ -71,7 +70,6 @@ else
     exit 1
 fi
 
-
 # Check if portworx ds is there, if there,  get the ds details else, exit with error
 # Store the number of desired and ready pods
 # Show the current pods and ds status
@@ -81,7 +79,7 @@ if ! sc_state=$(kubectl get storagecluster ${PX_CLUSTER_NAME} -n ${NAMESPACE}); 
     exit 1
 else
     STATUS=$(kubectl get storagecluster ${PX_CLUSTER_NAME} -n ${NAMESPACE} -o jsonpath='{.status.phase}')
-    if [ "$STATUS" != "Online" ]; then
+    if [ "$STATUS" != "Online" ] || [ "$STATUS" != "Running" ]; then
         printf "[ERROR] Portworx Storage Cluster is not Online. Cluster Status: ($STATUS), will not proceed with the upgrade!!\n"
         exit 1
     else
@@ -90,15 +88,13 @@ else
     fi
 fi
 
-
-
 # Configure kubeconfig
 # Get helm binary over the internet, install helm v3.3.0
 # Trigger the helm upgrade
 printf "[INFO] Installing new Helm Charts...\n"
 $CMD repo add ibm-helm-portworx https://raw.githubusercontent.com/portworx/ibm-helm/master/repo/stable
 $CMD repo update
-$CMD get values portworx -n ${CHART_NAMESPACE} > /tmp/values.yaml
+$CMD get values portworx -n ${CHART_NAMESPACE} >/tmp/values.yaml
 sed -i -E -e 's@PX_IMAGE=icr.io/ext/portworx/px-enterprise:.*$@PX_IMAGE=icr.io/ext/portworx/px-enterprise:'"$IMAGE_VERSION"'@g' /tmp/values.yaml
 $CMD upgrade portworx ibm-helm/portworx -f /tmp/values.yaml --set imageVersion=$IMAGE_VERSION -n ${CHART_NAMESPACE}
 
@@ -114,11 +110,10 @@ LIMIT=20
 RETRIES=0
 sleep $SLEEP_TIME
 
-while [ "$RETRIES" -le "$LIMIT" ]
-do
+while [ "$RETRIES" -le "$LIMIT" ]; do
     STATUS=$(kubectl get storagecluster ${PX_CLUSTER_NAME} -n ${NAMESPACE} -o jsonpath='{.status.phase}')
     CLUSTER_VERSION=$(kubectl get storagecluster ${PX_CLUSTER_NAME} -n ${NAMESPACE} -o jsonpath='{.status.version}')
-    if [ "$STATUS" == "Online" ] && [ "$CLUSTER_VERSION" == "$IMAGE_VERSION" ]; then
+    if ([ "$STATUS" == "Online" ] || [ "$STATUS" == "Running" ]) && [ "$CLUSTER_VERSION" == "$IMAGE_VERSION" ]; then
         S=$(kubectl get storagecluster ${PX_CLUSTER_NAME} -n ${NAMESPACE} -o jsonpath='{.status}' | jq)
         printf "[SUCCESS] Portworx Storage Cluster is Online.\n$S$DIVIDER"
         break
@@ -135,14 +130,13 @@ if [ "$RETRIES" -gt "$LIMIT" ]; then
     exit 1
 fi
 
-
 RETRIES=0
 DESIRED=$(kubectl get pods -l name=portworx -n ${NAMESPACE} --no-headers | wc -l)
 READY=0
 LIMIT=100
 while [ "$RETRIES" -le "$LIMIT" ]; do
     printf "[INFO] Getting Portworx Storage Class Pods Status..\n"
-    READY=$(kubectl get pods -l name=portworx -n ${NAMESPACE} -o custom-columns=":metadata.name,:spec.containers[0].image,:status.containerStatuses[0].ready" | awk -v IMAGE_VERSION="${IMAGE_VERSION}"  '{split($2,a,":")} a[2] == IMAGE_VERSION && $3 == "true"  { print $0 }' | wc -l)
+    READY=$(kubectl get pods -l name=portworx -n ${NAMESPACE} -o custom-columns=":metadata.name,:spec.containers[0].image,:status.containerStatuses[0].ready" | awk -v IMAGE_VERSION="${IMAGE_VERSION}" '{split($2,a,":")} a[2] == IMAGE_VERSION && $3 == "true"  { print $0 }' | wc -l)
     S=$(kubectl get pods -l name=portworx -n ${NAMESPACE} -o custom-columns=":metadata.name,:status.phase,:spec.containers[0].image")
     printf "$DIVIDER*\t\t\t\tPods (${READY// /}/${DESIRED// /})\t\t\t\t*$DIVIDER$S$DIVIDER"
     if [ "${READY// /}" -eq "${DESIRED// /}" ]; then
@@ -158,14 +152,13 @@ if [ "$RETRIES" -gt "$LIMIT" ]; then
     exit 1
 fi
 
-
 RETRIES=0
 while [ "$RETRIES" -le "$LIMIT" ]; do
     echo "[INFO] Getting Portworx Installation Status..."
     PX_POD=$(kubectl get pods -l name=portworx -n ${NAMESPACE} -o custom-columns=":metadata.name" | awk 'END{print}')
     if ! STATUS=$(kubectl exec $PX_POD -n ${NAMESPACE} -- /opt/pwx/bin/pxctl status --json | jq -r '.status'); then
         echo "[WARN] Portworx Status Not Found, will retry in $SLEEP_TIME secs!"
-        (( RETRIES++ ))
+        ((RETRIES++))
         sleep $SLEEP_TIME
     elif [ "$STATUS" == "STATUS_OK" ]; then
         printf "$DIVIDER*\t\t\tPortworx Status: $STATUS\t\t\t*$DIVIDER"

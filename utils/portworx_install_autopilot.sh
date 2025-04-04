@@ -58,7 +58,7 @@ if ! sc_state=$(kubectl get storagecluster ${PX_CLUSTER_NAME} -n ${NAMESPACE}); 
     exit 1
 else
     STATUS=$(kubectl get storagecluster ${PX_CLUSTER_NAME} -n ${NAMESPACE} -o jsonpath='{.status.phase}')
-    if [ "$STATUS" != "Online" ]; then
+    if [ "$STATUS" != "Online" ] || [ "$STATUS" != "Running" ]; then
         printf "[ERROR] Portworx Storage Cluster is not Online. Cluster Status: ($STATUS), will not proceed with the upgrade!!\n"
         exit 1
     else
@@ -67,15 +67,13 @@ else
     fi
 fi
 
-
-
 # Configure kubeconfig
 # Get helm binary over the internet, install helm v3.3.0
 # Trigger the helm upgrade
 
 AUTOPILOT_SPEC=/tmp/autopilot.yaml
 printf "[INFO] get autopilot yaml"
-curl  "https://install.portworx.com/?comp=autopilot" > $AUTOPILOT_SPEC
+curl "https://install.portworx.com/?comp=autopilot" >$AUTOPILOT_SPEC
 printf "[INFO] setting up prometheus url\n"
 PROMETHEUS_URL=http://prometheus:9091
 PROMETHEUS_URL_LINE_NO=$(grep -n 'http://prometheus:9090' ${AUTOPILOT_SPEC} | cut -d ':' -f1)
@@ -139,8 +137,7 @@ spec:
         scaletype: \"add-disk\"
 "
 
-printf "$AUTOEXPAND_RULE" > /tmp/autoexpand.yml
-
+printf "$AUTOEXPAND_RULE" >/tmp/autoexpand.yml
 
 printf "[INFO] Applying default autopilot rule\n"
 kubectl -n $NAMESPACE apply -f /tmp/autoexpand.yml
