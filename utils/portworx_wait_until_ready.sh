@@ -10,10 +10,10 @@ RETRIES=0
 sleep 90
 
 while [ "$RETRIES" -le "$LIMIT" ]; do
-  STATUS=$(kubectl get storagecluster ${PX_CLUSTER_NAME} -n ${NAMESPACE} -o yaml | grep phase | cut -d ":" -f2)
-  if [ "${STATUS// /}" == "Online" ] || [ "${STATUS// /}" == "Running" ]; then
-    CLUSTER_ID=$(kubectl get storagecluster ${PX_CLUSTER_NAME} -n ${NAMESPACE} -o yaml | grep clusterUid | cut -d ":" -f2)
-    printf "[SUCCESS] Portworx Storage Cluster is Online. Cluster ID: (${CLUSTER_ID// /})\n"
+  STATUS=$(kubectl get storagecluster "${PX_CLUSTER_NAME}" -n "${NAMESPACE}" -o jsonpath='{.status.phase}' | tr -d '[:space:]')
+  if [[ "$STATUS" == "Online" || "$STATUS" == "Running" ]]; then
+    CLUSTER_ID=$(kubectl get storagecluster "${PX_CLUSTER_NAME}" -n "${NAMESPACE}" -o jsonpath='{.status.clusterUid}' | tr -d '[:space:]')
+    printf "[SUCCESS] Portworx Storage Cluster is Online. Cluster ID: (%s)\n" "$CLUSTER_ID"
     break
   fi
   printf "[INFO] Portworx Storage Cluster Status: [ $STATUS ]\n"
